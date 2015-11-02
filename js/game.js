@@ -49,7 +49,6 @@ $(document).ready(function(){
     player.sprite = game.add.sprite(300, game.world.height - 70, 'dank');
     game.physics.arcade.enable(player);
     player.sprite.scale.setTo(2, 0.5);
-    player.sprite.body.collideWorldBounds = true;
   }
 
   function update() {
@@ -64,15 +63,15 @@ $(document).ready(function(){
   function movePlayer(){
     if (cursors.left.isDown){
       if(cursors.left.shiftKey){
-        player.x -= paddleSpeed * 2;
+        player.sprite.x -= paddleSpeed * 2;
       } else {
-        player.x -= paddleSpeed;
+        player.sprite.x -= paddleSpeed;
       }
     } else if (cursors.right.isDown) {
       if(cursors.right.shiftKey){
-        player.x += paddleSpeed * 2;
+        player.sprite.x += paddleSpeed * 2;
       } else {
-        player.x += paddleSpeed;
+        player.sprite.x += paddleSpeed;
       }
     }
   }
@@ -90,10 +89,10 @@ $(document).ready(function(){
   }
 
   function ballPlayerCollision(){
-    if ((ball.sprite.y + ball.sprite.height) > player.y
-                && ball.sprite.x > player.x 
-                && ball.sprite.x < (player.x + player.width)
-                && ball.sprite.y + ball.sprite.height < player.y + ball.velY){
+    if ((ball.sprite.y + ball.sprite.height) > player.sprite.y
+                && ball.sprite.x > player.sprite.x 
+                && ball.sprite.x < (player.sprite.x + player.sprite.width)
+                && ball.sprite.y + ball.sprite.height < player.sprite.y + ball.velY){
       ball.velY = -ball.velY;
     }
   }
