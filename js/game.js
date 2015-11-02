@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 
   function preload() {
     game.load.image('sky', 'assets/sky.png');
@@ -62,9 +62,18 @@ $(document).ready(function(){
     wallCollision();
     ballPlayerCollision();
     livesText.text = 'Lives: ' + player.lives;
+    game.physics.arcade.collide(ball.sprite, player.sprite, ass, null, this);
 
     ball.sprite.y += ball.velY;
     ball.sprite.x += ball.velX;
+  }
+
+  function render() {
+    game.debug.body(ball.sprite);
+  }
+
+  function ass() {
+    console.log("collided");
   }
 
   function movePlayer(){
@@ -102,9 +111,6 @@ $(document).ready(function(){
                 && ball.sprite.x <= (player.sprite.x + player.sprite.width)
                 && ball.velY > 0
                 && (ball.sprite.y + ball.sprite.height) < (player.sprite.y + player.sprite.height)){
-      ball.velY *= 1.2;
-      ball.velX *= 1.2;
-      paddleSpeed *= 1.2;
       ball.velY = -ball.velY;
     }
   }
