@@ -11,11 +11,14 @@ $(document).ready(function(){
       walls,
       ball = {
         velX: -3,
-        velY: -3
+        velY: 3
       },
-      player = {},
+      player = {
+        lives: 3
+      },
       cursors,
-      paddleSpeed = 4;
+      paddleSpeed = 4,
+      livesText;
 
   function create() {
     cursors = game.input.keyboard.createCursorKeys();
@@ -44,30 +47,34 @@ $(document).ready(function(){
 //      var block = blocks.create(i * 70, 30, 'block');
 //    }
 
-    ball.sprite = game.add.sprite(320, game.world.height - 120, 'star');
+    ball.sprite = game.add.sprite(350, game.world.height - 130, 'star');
+    game.physics.enable(ball.sprite, Phaser.Physics.ARCADE);
 
     player.sprite = game.add.sprite(300, game.world.height - 70, 'dank');
     game.physics.arcade.enable(player);
     player.sprite.scale.setTo(2, 0.5);
+
+    livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
   }
 
   function update() {
     movePlayer();
     wallCollision();
     ballPlayerCollision();
+    livesText.text = 'Lives: ' + player.lives;
 
     ball.sprite.y += ball.velY;
     ball.sprite.x += ball.velX;
   }
 
   function movePlayer(){
-    if (cursors.left.isDown){
+    if (cursors.left.isDown && player.sprite.x > game.world.bounds.left){
       if(cursors.left.shiftKey){
         player.sprite.x -= paddleSpeed * 2;
       } else {
         player.sprite.x -= paddleSpeed;
       }
-    } else if (cursors.right.isDown) {
+    } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
       if(cursors.right.shiftKey){
         player.sprite.x += paddleSpeed * 2;
       } else {
@@ -85,14 +92,19 @@ $(document).ready(function(){
       ball.velX = -ball.velX;
     } else if (ball.sprite.y > game.world.height - ball.sprite.height){
       ball.velY = -ball.velY;
+      player.lives -= 1;
     }
   }
 
   function ballPlayerCollision(){
-    if ((ball.sprite.y + ball.sprite.height) > player.sprite.y
-                && ball.sprite.x > player.sprite.x 
-                && ball.sprite.x < (player.sprite.x + player.sprite.width)
-                && ball.sprite.y + ball.sprite.height < player.sprite.y + ball.velY){
+    if ((ball.sprite.y + ball.sprite.height) >= player.sprite.y
+                && ball.sprite.x >= player.sprite.x 
+                && ball.sprite.x <= (player.sprite.x + player.sprite.width)
+                && ball.velY > 0
+                && (ball.sprite.y + ball.sprite.height) < (player.sprite.y + player.sprite.height)){
+      ball.velY *= 1.2;
+      ball.velX *= 1.2;
+      paddleSpeed *= 1.2;
       ball.velY = -ball.velY;
     }
   }
