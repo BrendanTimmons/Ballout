@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update});
+  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
   function preload(){
     game.load.image('sky', 'assets/sky.png');
@@ -11,8 +11,8 @@ $(document).ready(function(){
       walls,
       roof,
       ball = {
-        velX: -100,
-        velY: 100
+        velX: -200,
+        velY: 200
       },
       player = {
         lives: 3
@@ -44,17 +44,18 @@ $(document).ready(function(){
     game.physics.enable(roof, Phaser.Physics.ARCADE);
     roof.body.immovable = true;
 
-//    blocks = game.add.physicsGroup();
-//    blocks.enableBody = true;
+    blocks = game.add.physicsGroup();
+    blocks.enableBody = true;
 
-//    for (var i = 1; i < 10; i++){
-//      var block = blocks.create(i * 70, 30, 'block');
-//    }
+    for (var i = 1; i < 10; i++){
+      var block = blocks.create(i * 70, 30, 'block');
+      block.body.immovable = true;
+    }
 
     ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
     game.physics.enable(ball.sprite, Phaser.Physics.ARCADE);
 
-    player.sprite = game.add.sprite(300, game.world.height - 70, 'dank');
+    player.sprite = game.add.sprite(185, game.world.height - 70, 'dank');
     player.sprite.scale.setTo(2, 0.5);
     game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
     player.sprite.body.immovable = true;
@@ -76,16 +77,27 @@ $(document).ready(function(){
 
     game.physics.arcade.collide(ball.sprite, walls, wallCollision, null, this);
     game.physics.arcade.collide(ball.sprite, roof, roofCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
     game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
 
     outOfBounds();
   }
+
+  function render(){
+    game.debug.bodyInfo(ball.sprite, 32, 32);
+  }
+
+
+
+
+
 
   function updateHUD(){
     livesText.text = 'Lives: ' + player.lives;
 
     if(player.lives == 0){
       gameStateText.text = 'Game Over!';
+      ball.sprite.kill();
     }
   }
 
@@ -110,15 +122,28 @@ $(document).ready(function(){
   }
 
   function wallCollision(){
-    ball.velX = -ball.velX;
+    ballCollision();
   }
 
   function roofCollision(){
-    ball.velY = -ball.velY;
+    ballCollision();
+  }
+
+  function blockCollision(obj1, obj2){
+    ballCollision();
+    obj2.kill();
   }
 
   function playerBallCollision(){
-    ball.velY = -ball.velY;
+    ballCollision();
+  }
+
+  function ballCollision(){
+    if(ball.sprite.body.touching.up || ball.sprite.body.touching.down){
+      ball.velY = -ball.velY;
+    } else if (ball.sprite.body.touching.left || ball.sprite.body.touching.right){
+      ball.velX = -ball.velX;
+    }
   }
 
   function togglePause(){
