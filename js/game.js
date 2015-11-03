@@ -95,6 +95,11 @@ $(document).ready(function(){
   function updateHUD(){
     livesText.text = 'Lives: ' + player.lives;
 
+    if(blocks.children.length == 0){
+      gameStateText.text = 'You Win!';
+      ball.sprite.kill();
+    }
+
     if(player.lives == 0){
       gameStateText.text = 'Game Over!';
       ball.sprite.kill();
@@ -123,7 +128,8 @@ $(document).ready(function(){
 
   function blockCollision(obj1, obj2){
     ballCollision();
-    obj2.kill();
+    obj2.destroy();
+    console.log(blocks.children.length);
   }
 
   function ballCollision(){
