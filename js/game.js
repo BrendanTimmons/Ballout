@@ -75,16 +75,16 @@ $(document).ready(function(){
     ball.sprite.body.velocity.x = ball.velX;
     ball.sprite.body.velocity.y = ball.velY;
 
-    game.physics.arcade.collide(ball.sprite, walls, wallCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, roof, roofCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
     game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, player.sprite, ballCollision, null, this);
 
     outOfBounds();
   }
 
   function render(){
-    game.debug.bodyInfo(ball.sprite, 32, 32);
+//    game.debug.bodyInfo(ball.sprite, 32, 32);
   }
 
 
@@ -121,21 +121,9 @@ $(document).ready(function(){
     }
   }
 
-  function wallCollision(){
-    ballCollision();
-  }
-
-  function roofCollision(){
-    ballCollision();
-  }
-
   function blockCollision(obj1, obj2){
     ballCollision();
     obj2.kill();
-  }
-
-  function playerBallCollision(){
-    ballCollision();
   }
 
   function ballCollision(){
