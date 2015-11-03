@@ -9,30 +9,61 @@ $(document).ready(function(){
     game.load.image('block', 'assets/block.gif');
   }
 
+
+  var player = {
+    lives: 3,
+    speed: 300
+  }
+
+  var ball = {
+    vel: 300,
+    velAngle: 125
+  }
+
   var blocks,
       walls,
       roof,
-      ball = {
-        velX: -200,
-        velY: 200
-      },
-      player = {
-        lives: 3,
-        speed: 8
-      },
       cursors,
-      paddleSpeed = 300,
       livesText,
       gameStateText;
 
   function create(){
     cursors = game.input.keyboard.createCursorKeys();
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+    createLevel();
 
+    ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
+    player.sprite = game.add.sprite(185, game.world.height - 70, 'paddle');
+
+    livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
+    gameStateText = game.add.text(game.world.centerX, game.world.centerY, '', {fontSize: '40px', fill: 'red'});
+    gameStateText.anchor.set(0.5);
+
+    pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    pauseKey.onDown.add(togglePause, this);
+
+    initPhysics();
+  }
+
+  function update(){
+    movePlayer();
+    updateHUD();
+
+    game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, player.sprite, ballCollision, null, this);
+
+    outOfBounds();
+  }
+
+  function render(){
+//    game.debug.bodyInfo(ball.sprite, 32, 32);
+  }
+
+
+  function createLevel(){
     game.add.sprite(0, 0, 'sky');
-
     walls = game.add.physicsGroup();
-    walls.enableBody = true;
 
     var wall = walls.create(0, 0, 'ground');
     wall.scale.setTo(0.05, 60);
@@ -48,8 +79,8 @@ $(document).ready(function(){
     roof.body.immovable = true;
 
     blocks = game.add.physicsGroup();
-    blocks.enableBody = true;
 
+    // FIX THIS SHIT
     for (var i = 1; i < 10; i++){
       var block = blocks.create(i * 70, 60, 'block');
       block.body.immovable = true;
@@ -59,45 +90,22 @@ $(document).ready(function(){
       var block = blocks.create(i * 70, 90, 'block');
       block.body.immovable = true;
     }
+  }
 
-    ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
+  function initPhysics(){
+    game.physics.startSystem(Phaser.Physics.ARCADE);
+
+    walls.enableBody = true;
+    blocks.enableBody = true;
+
     game.physics.enable(ball.sprite, Phaser.Physics.ARCADE);
+    ball.sprite.body.bounce.set(1.02);
 
-    player.sprite = game.add.sprite(185, game.world.height - 70, 'paddle');
     game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
     player.sprite.body.immovable = true;
 
-    livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
-    gameStateText = game.add.text(game.world.centerX, game.world.centerY, '', {fontSize: '40px', fill: 'red'});
-    gameStateText.anchor.set(0.5);
-
-    pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    pauseKey.onDown.add(togglePause, this);
+    game.physics.arcade.velocityFromAngle(ball.velAngle, ball.vel, ball.sprite.body.velocity);
   }
-
-  function update(){
-    movePlayer();
-    updateHUD();
-
-    ball.sprite.body.velocity.x = ball.velX;
-    ball.sprite.body.velocity.y = ball.velY;
-
-    game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, player.sprite, ballCollision, null, this);
-
-    outOfBounds();
-  }
-
-  function render(){
-//    game.debug.bodyInfo(ball.sprite, 32, 32);
-  }
-
-
-
-
-
 
   function updateHUD(){
     livesText.text = 'Lives: ' + player.lives;
@@ -116,19 +124,23 @@ $(document).ready(function(){
   function movePlayer(){
     if (cursors.left.isDown && player.sprite.x > game.world.bounds.left){
       if(cursors.left.shiftKey){
-        player.sprite.body.velocity.x = -paddleSpeed * 2;
+        player.sprite.body.velocity.x = -player.speed * 2;
         game.physics.arcade.isPaused = false;
+        gameStateText.text = '';
       } else {
-        player.sprite.body.velocity.x = -paddleSpeed;
+        player.sprite.body.velocity.x = -player.speed;
         game.physics.arcade.isPaused = false;
+        gameStateText.text = '';
       }
     } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
       if(cursors.right.shiftKey){
-        player.sprite.body.velocity.x = paddleSpeed * 2;
+        player.sprite.body.velocity.x = player.speed * 2;
         game.physics.arcade.isPaused = false;
+        gameStateText.text = '';
       } else {
-        player.sprite.body.velocity.x = paddleSpeed;
+        player.sprite.body.velocity.x = player.speed;
         game.physics.arcade.isPaused = false;
+        gameStateText.text = '';
       }
     } else {
       player.sprite.body.velocity.x = 0;
@@ -141,22 +153,27 @@ $(document).ready(function(){
   }
 
   function ballCollision(){
-    if(ball.sprite.body.touching.up || ball.sprite.body.touching.down){
-      ball.velY = -ball.velY;
-    } else if (ball.sprite.body.touching.left || ball.sprite.body.touching.right){
-      ball.velX = -ball.velX;
-    }
+    // play a sound or something.
   }
 
   function togglePause(){
     game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
+    gameStateText.text = 'Paused.';
   }
 
   function outOfBounds(){
     if(ball.sprite.y > game.world.height){
       player.lives -= 1;
-      ball.sprite.x = game.world.centerX;
-      ball.sprite.y = game.world.centerY;
+      resetBall();
     }
+  }
+
+  function resetBall(){
+    ball.sprite.x = game.world.centerX;
+    ball.sprite.y = game.world.centerY;
+
+    setTimeout(function(){
+      //Somehow get the ball to stop and start again...
+    }, 3000);
   }
 });
