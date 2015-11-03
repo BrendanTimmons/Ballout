@@ -4,7 +4,9 @@ $(document).ready(function(){
   function preload(){
     game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/star.png');
+    game.load.image('star', 'assets/ball.gif');
+    game.load.image('paddle', 'assets/player.gif');
+    game.load.image('block', 'assets/block.gif');
   }
 
   var blocks,
@@ -48,15 +50,19 @@ $(document).ready(function(){
     blocks.enableBody = true;
 
     for (var i = 1; i < 10; i++){
-      var block = blocks.create(i * 70, 30, 'block');
+      var block = blocks.create(i * 70, 60, 'block');
+      block.body.immovable = true;
+    }
+
+    for (var i = 1; i < 10; i++){
+      var block = blocks.create(i * 70, 90, 'block');
       block.body.immovable = true;
     }
 
     ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
     game.physics.enable(ball.sprite, Phaser.Physics.ARCADE);
 
-    player.sprite = game.add.sprite(185, game.world.height - 70, 'dank');
-    player.sprite.scale.setTo(2, 0.5);
+    player.sprite = game.add.sprite(185, game.world.height - 70, 'paddle');
     game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
     player.sprite.body.immovable = true;
 
@@ -126,10 +132,9 @@ $(document).ready(function(){
     }
   }
 
-  function blockCollision(obj1, obj2){
+  function blockCollision(ballObj, blockObj){
     ballCollision();
-    obj2.destroy();
-    console.log(blocks.children.length);
+    blockObj.destroy();
   }
 
   function ballCollision(){
