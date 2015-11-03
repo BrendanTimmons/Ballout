@@ -17,10 +17,11 @@ $(document).ready(function(){
         velY: 200
       },
       player = {
-        lives: 3
+        lives: 3,
+        speed: 8
       },
       cursors,
-      paddleSpeed = 4,
+      paddleSpeed = 300,
       livesText,
       gameStateText;
 
@@ -115,20 +116,22 @@ $(document).ready(function(){
   function movePlayer(){
     if (cursors.left.isDown && player.sprite.x > game.world.bounds.left){
       if(cursors.left.shiftKey){
-        player.sprite.x -= paddleSpeed * 2;
+        player.sprite.body.velocity.x = -paddleSpeed * 2;
         game.physics.arcade.isPaused = false;
       } else {
-        player.sprite.x -= paddleSpeed;
+        player.sprite.body.velocity.x = -paddleSpeed;
         game.physics.arcade.isPaused = false;
       }
     } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
       if(cursors.right.shiftKey){
-        player.sprite.x += paddleSpeed * 2;
+        player.sprite.body.velocity.x = paddleSpeed * 2;
         game.physics.arcade.isPaused = false;
       } else {
-        player.sprite.x += paddleSpeed;
+        player.sprite.body.velocity.x = paddleSpeed;
         game.physics.arcade.isPaused = false;
       }
+    } else {
+      player.sprite.body.velocity.x = 0;
     }
   }
 
