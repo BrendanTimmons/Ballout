@@ -9,17 +9,6 @@ $(document).ready(function(){
     game.load.image('block', 'assets/block.gif');
   }
 
-
-  var player = {
-    lives: 3,
-    speed: 300
-  }
-
-  var ball = {
-    vel: 300,
-    velAngle: 125
-  }
-
   var blocks,
       walls,
       roof,
@@ -27,12 +16,23 @@ $(document).ready(function(){
       livesText,
       gameStateText;
 
+  var player = {
+    lives: 3,
+    speed: 400
+  }
+
+  var ball = {
+    vel: 300,
+    velAngle: 125,
+    bounce: 1.04
+  }
+
   function create(){
     cursors = game.input.keyboard.createCursorKeys();
     createLevel();
 
     ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
-    player.sprite = game.add.sprite(185, game.world.height - 70, 'paddle');
+    player.sprite = game.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
 
     livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
     gameStateText = game.add.text(game.world.centerX, game.world.centerY, '', {fontSize: '40px', fill: 'red'});
@@ -51,7 +51,7 @@ $(document).ready(function(){
     game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
     game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
     game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, player.sprite, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
 
     outOfBounds();
   }
@@ -99,12 +99,15 @@ $(document).ready(function(){
     blocks.enableBody = true;
 
     game.physics.enable(ball.sprite, Phaser.Physics.ARCADE);
-    ball.sprite.body.bounce.set(1.02);
+    ball.sprite.body.bounce.set(ball.bounce);
 
     game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
     player.sprite.body.immovable = true;
 
-    game.physics.arcade.velocityFromAngle(ball.velAngle, ball.vel, ball.sprite.body.velocity);
+    setTimeout(function(){
+      game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
+      ball.sprite.body.gravity.y = 600;
+    }, 2000);
   }
 
   function updateHUD(){
@@ -123,24 +126,20 @@ $(document).ready(function(){
 
   function movePlayer(){
     if (cursors.left.isDown && player.sprite.x > game.world.bounds.left){
+      player.sprite.body.velocity.x = -player.speed;
+      game.physics.arcade.isPaused = false;
+      gameStateText.text = '';
+
       if(cursors.left.shiftKey){
         player.sprite.body.velocity.x = -player.speed * 2;
-        game.physics.arcade.isPaused = false;
-        gameStateText.text = '';
-      } else {
-        player.sprite.body.velocity.x = -player.speed;
-        game.physics.arcade.isPaused = false;
-        gameStateText.text = '';
       }
     } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
+      player.sprite.body.velocity.x = player.speed;
+      game.physics.arcade.isPaused = false;
+      gameStateText.text = '';
+
       if(cursors.right.shiftKey){
         player.sprite.body.velocity.x = player.speed * 2;
-        game.physics.arcade.isPaused = false;
-        gameStateText.text = '';
-      } else {
-        player.sprite.body.velocity.x = player.speed;
-        game.physics.arcade.isPaused = false;
-        gameStateText.text = '';
       }
     } else {
       player.sprite.body.velocity.x = 0;
@@ -154,6 +153,12 @@ $(document).ready(function(){
 
   function ballCollision(){
     // play a sound or something.
+  }
+
+  function playerBallCollision(){
+    var ass = (ball.sprite.x + (ball.sprite.width / 2) - player.sprite.x) / player.sprite.width;
+    var newVel = Math.sqrt(Math.pow(ball.sprite.body.velocity.x, 2) + Math.pow(ball.sprite.body.velocity.y, 2));
+    game.physics.arcade.velocityFromAngle(225 + (ass * 90), newVel, ball.sprite.body.velocity);
   }
 
   function togglePause(){
@@ -171,9 +176,17 @@ $(document).ready(function(){
   function resetBall(){
     ball.sprite.x = game.world.centerX;
     ball.sprite.y = game.world.centerY;
+    game.physics.arcade.velocityFromAngle(ball.velAngle, 0, ball.sprite.body.velocity);
+
+      ball.sprite.body.gravity.y = 0;
 
     setTimeout(function(){
-      //Somehow get the ball to stop and start again...
-    }, 3000);
+      game.physics.arcade.velocityFromAngle(startAngle(), 300, ball.sprite.body.velocity);
+      ball.sprite.body.gravity.y = 600;
+    }, 2000);
+  }
+
+  function startAngle(){
+    return 67.5 + (Math.random() * 45);
   }
 });
