@@ -14,7 +14,8 @@ $(document).ready(function(){
       roof,
       cursors,
       livesText,
-      gameStateText;
+      gameStateText,
+      shift;
 
   var player = {
     lives: 3,
@@ -24,11 +25,14 @@ $(document).ready(function(){
   var ball = {
     vel: 300,
     velAngle: 125,
-    bounce: 1.04
+    bounce: 1.04,
+    gravity: 450
   }
+
 
   function create(){
     cursors = game.input.keyboard.createCursorKeys();
+    shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
     createLevel();
 
     ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
@@ -106,7 +110,7 @@ $(document).ready(function(){
 
     setTimeout(function(){
       game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
-      ball.sprite.body.gravity.y = 600;
+      ball.sprite.body.gravity.y = ball.gravity;
     }, 2000);
   }
 
@@ -129,20 +133,17 @@ $(document).ready(function(){
       player.sprite.body.velocity.x = -player.speed;
       game.physics.arcade.isPaused = false;
       gameStateText.text = '';
-
-      if(cursors.left.shiftKey){
-        player.sprite.body.velocity.x = -player.speed * 2;
-      }
     } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
       player.sprite.body.velocity.x = player.speed;
       game.physics.arcade.isPaused = false;
       gameStateText.text = '';
-
-      if(cursors.right.shiftKey){
-        player.sprite.body.velocity.x = player.speed * 2;
-      }
     } else {
       player.sprite.body.velocity.x = 0;
+    }
+    if(shift.isDown){
+      player.speed = 800;
+    } else {
+      player.speed = 400;
     }
   }
 
