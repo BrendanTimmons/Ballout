@@ -2,7 +2,6 @@ $(document).ready(function(){
   var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
   function preload(){
-    game.load.image('sky', 'assets/sky.png');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/ball.gif');
     game.load.image('paddle', 'assets/player.gif');
