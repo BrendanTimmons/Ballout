@@ -12,10 +12,14 @@ $(document).ready(function(){
   var blocks,
       walls,
       roof,
-      cursors,
       livesText,
       gameStateText,
-      shift;
+      gameStarted = false;
+
+  var cursors,
+      shift,
+      space,
+      esc;
 
   var player = {
     lives: 3,
@@ -31,32 +35,16 @@ $(document).ready(function(){
 
 
   function create(){
-    cursors = game.input.keyboard.createCursorKeys();
-    shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
     createLevel();
-
-    ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
-    player.sprite = game.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
-
-    livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
-    gameStateText = game.add.text(game.world.centerX, game.world.centerY, '', {fontSize: '40px', fill: 'red'});
-    gameStateText.anchor.set(0.5);
-
-    pauseKey = this.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-    pauseKey.onDown.add(togglePause, this);
-
+    bindKeys();
+    createHUD();
     initPhysics();
   }
 
   function update(){
     movePlayer();
     updateHUD();
-
-    game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
-
+    checkCollisions();
     outOfBounds();
   }
 
@@ -65,8 +53,34 @@ $(document).ready(function(){
   }
 
 
+
+  //
+  // CREATE WORLD
+  //
+
+  function startAngle(){
+    return 67.5 + (Math.random() * 45);
+  }
+
+  function createHUD(){
+    livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
+    gameStateText = game.add.text(game.world.centerX, game.world.centerY - 50, "Press 'Spacebar' to start.", {fontSize: '40px', fill: 'red'});
+    gameStateText.anchor.set(0.5);
+  }
+
+  function bindKeys(){
+    cursors = game.input.keyboard.createCursorKeys();
+    shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
+
+    space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+    space.onDown.add(startGame, this);
+
+    esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    esc.onDown.add(togglePause, this);
+  }
+
   function createLevel(){
-    game.add.sprite(0, 0, 'sky');
+    game.stage.backgroundColor = '#DDDDDD';
     walls = game.add.physicsGroup();
 
     var wall = walls.create(0, 0, 'ground');
@@ -94,6 +108,9 @@ $(document).ready(function(){
       var block = blocks.create(i * 70, 90, 'block');
       block.body.immovable = true;
     }
+
+    ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
+    player.sprite = game.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
   }
 
   function initPhysics(){
@@ -108,10 +125,19 @@ $(document).ready(function(){
     game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
     player.sprite.body.immovable = true;
 
-    setTimeout(function(){
-      game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
-      ball.sprite.body.gravity.y = ball.gravity;
-    }, 2000);
+  }
+
+
+
+  //
+  // GAMEPLAY UPDATES
+  //
+
+  function checkCollisions(){
+    game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
   }
 
   function updateHUD(){
@@ -131,12 +157,8 @@ $(document).ready(function(){
   function movePlayer(){
     if (cursors.left.isDown && player.sprite.x > game.world.bounds.left){
       player.sprite.body.velocity.x = -player.speed;
-      game.physics.arcade.isPaused = false;
-      gameStateText.text = '';
     } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
       player.sprite.body.velocity.x = player.speed;
-      game.physics.arcade.isPaused = false;
-      gameStateText.text = '';
     } else {
       player.sprite.body.velocity.x = 0;
     }
@@ -157,14 +179,13 @@ $(document).ready(function(){
   }
 
   function playerBallCollision(){
-    var ass = (ball.sprite.x + (ball.sprite.width / 2) - player.sprite.x) / player.sprite.width;
+    var collisionLoc = (ball.sprite.x + (ball.sprite.width / 2) - player.sprite.x) / player.sprite.width;
     var newVel = Math.sqrt(Math.pow(ball.sprite.body.velocity.x, 2) + Math.pow(ball.sprite.body.velocity.y, 2));
-    game.physics.arcade.velocityFromAngle(225 + (ass * 90), newVel, ball.sprite.body.velocity);
+    game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, ball.sprite.body.velocity);
   }
 
   function togglePause(){
     game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
-    gameStateText.text = 'Paused.';
   }
 
   function outOfBounds(){
@@ -174,20 +195,45 @@ $(document).ready(function(){
     }
   }
 
+  var tick = function(counter){
+    gameStateText.text = counter;
+  }
+
+  function startGame(){
+    if (!gameStarted){
+      gameStarted = true;
+      var complete = function(){
+        gameStateText.text = '';
+        game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
+        ball.sprite.body.gravity.y = ball.gravity;
+      };
+      countdown(tick, complete, 3);
+    }
+  }
+
   function resetBall(){
     ball.sprite.x = game.world.centerX;
     ball.sprite.y = game.world.centerY;
     game.physics.arcade.velocityFromAngle(ball.velAngle, 0, ball.sprite.body.velocity);
+    ball.sprite.body.gravity.y = 0;
 
-      ball.sprite.body.gravity.y = 0;
-
-    setTimeout(function(){
+    var complete = function(){
+      gameStateText.text = '';
       game.physics.arcade.velocityFromAngle(startAngle(), 300, ball.sprite.body.velocity);
-      ball.sprite.body.gravity.y = 600;
-    }, 2000);
+      ball.sprite.body.gravity.y = ball.gravity;
+    };
+    countdown(tick, complete, 3);
   }
 
-  function startAngle(){
-    return 67.5 + (Math.random() * 45);
+  function countdown(tick, complete, counter){
+    if (counter > 0){
+      tick(counter);
+      counter --;
+      setTimeout(function(){
+        countdown(tick, complete, counter);
+      }, 1000);
+    } else {
+      complete();
+    }
   }
 });
