@@ -9,4 +9,6 @@ Left / Right moves player
 
 Shift Increases Speed
 
-Space Pauses
+Esc Pauses
+
+Space starts the game.
