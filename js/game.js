@@ -2,15 +2,19 @@ $(document).ready(function(){
   var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
 
   function preload(){
+    game.load.image('bg', 'assets/balloutbg.jpg');
     game.load.image('ground', 'assets/platform.png');
-    game.load.image('star', 'assets/ball.gif');
+    game.load.image('star', 'assets/ball.png');
     game.load.image('paddle', 'assets/player.gif');
     game.load.image('block', 'assets/block.gif');
+    game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
+    game.load.json('level', 'levels/lvl1.json');
   }
-
+  
   var blocks,
       walls,
       roof,
+      music,
       livesText,
       gameStateText,
       gameStarted = false;
@@ -38,6 +42,8 @@ $(document).ready(function(){
     bindKeys();
     createHUD();
     initPhysics();
+    music = game.add.audio('soundtrack');
+    music.play();
   }
 
   function update(){
@@ -79,7 +85,7 @@ $(document).ready(function(){
   }
 
   function createLevel(){
-    game.stage.backgroundColor = '#DDDDDD';
+    game.add.sprite(0,0, 'bg');
     walls = game.add.physicsGroup();
 
     var wall = walls.create(0, 0, 'ground');
@@ -97,16 +103,14 @@ $(document).ready(function(){
 
     blocks = game.add.physicsGroup();
 
-    // FIX THIS SHIT
-    for (var i = 1; i < 10; i++){
-      var block = blocks.create(i * 70, 60, 'block');
-      block.body.immovable = true;
-    }
 
-    for (var i = 1; i < 10; i++){
-      var block = blocks.create(i * 70, 90, 'block');
+    var levelData = game.cache.getJSON('level');
+
+    levelData.blockData.forEach(function(ele){
+      var block = blocks.create(ele.x, ele.y, 'block');
       block.body.immovable = true;
-    }
+    });
+
 
     ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
     player.sprite = game.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
