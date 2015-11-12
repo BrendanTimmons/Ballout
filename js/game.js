@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render});
+  var game = new Phaser.Game(800, 600, Phaser.AUTO, 'game-canvas', { preload: preload, create: create, update: update, render: render});
 
   function preload(){
     game.load.image('bg', 'assets/balloutbg.jpg');

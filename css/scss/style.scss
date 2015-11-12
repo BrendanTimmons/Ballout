@@ -1,0 +1,39 @@
+body{
+  background: #3f3440; 
+  font-family: sans-serif; 
+  color: #ff5dbd;
+  text-align: center;
+}
+.container{
+  display: block;
+  margin: 0 auto;
+  width: 800px;
+}
+#game-canvas{
+  box-shadow: 0px 0px 15px 0px #ff5dbd;
+  -webkit-animation: pulse 0.45s infinite; /* Safari 4+ */
+  -moz-animation:    pulse 0.45s infinite; /* Fx 5+ */
+  -o-animation:      pulse 0.45s infinite; /* Opera 12+ */
+  animation:         pulse 0.45s infinite; /* IE 10+, Fx 29+ */
+}
+@-webkit-keyframes pulse {
+  0%   {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+  50%  { box-shadow: 0px 0px 35px 0px #ff5dbd; }
+  100% {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+}
+@-moz-keyframes pulse {
+  0%   {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+  50%  { box-shadow: 0px 0px 25px 0px #ff5dbd; }
+  100% {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+}
+@-o-keyframes pulse {
+  0%   {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+  50%  { box-shadow: 0px 0px 25px 0px #ff5dbd; }
+  100% {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+}
+@keyframes pulse {
+  0%   {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+  50%  { box-shadow: 0px 0px 25px 0px #ff5dbd; }
+  100% {box-shadow: 0px 0px 15px 0px #ff5dbd;}
+}
+
