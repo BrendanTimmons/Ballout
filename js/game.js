@@ -5,7 +5,7 @@ $(document).ready(function(){
     game.load.image('bg', 'assets/balloutbg.jpg');
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');
-    game.load.image('paddle', 'assets/player.gif');
+    game.load.image('paddle', 'assets/player.png');
     game.load.image('block', 'assets/block.gif');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
     game.load.json('level', 'levels/lvl1.json');
@@ -43,7 +43,6 @@ $(document).ready(function(){
     createHUD();
     initPhysics();
     music = game.add.audio('soundtrack');
-    music.play();
   }
 
   function update(){
@@ -68,8 +67,8 @@ $(document).ready(function(){
   }
 
   function createHUD(){
-    livesText = game.add.text(30, game.world.height -30, 'Lives: ' + player.lives, {fontSize: '20px', fill: 'red'});
-    gameStateText = game.add.text(game.world.centerX, game.world.centerY - 50, "Press 'Spacebar' to start.", {fontSize: '40px', fill: 'red'});
+    livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + player.lives, {fontSize: '20px', fill: '#ff5dbd'});
+    gameStateText = game.add.text(game.world.centerX, game.world.centerY - 50, "Press 'Spacebar' to start.", {fontSize: '40px', fill: '#ff5dbd'});
     gameStateText.anchor.set(0.5);
   }
 
@@ -205,6 +204,7 @@ $(document).ready(function(){
   function startGame(){
     if (!gameStarted){
       gameStarted = true;
+      music.play();
       var complete = function(){
         gameStateText.text = '';
         game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
