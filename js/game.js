@@ -8,21 +8,29 @@ $(document).ready(function(){
     game.load.image('paddle', 'assets/player.png');
     game.load.image('block', 'assets/block.png');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
+    game.load.audio('blip', 'assets/audio/blip.wav');
+    game.load.audio('blip2', 'assets/audio/blip2.wav');
+    game.load.audio('explosion', 'assets/audio/Explosion2.wav');
     game.load.json('level', 'levels/lvl1.json');
   }
   
   var blocks,
       walls,
       roof,
-      music,
       livesText,
       gameStateText,
+      scoreText,
       gameStarted = false;
 
   var cursors,
       shift,
       space,
       esc;
+
+  var music,
+      blip,
+      blip2,
+      explosion
 
   var player = {
     lives: 3,
@@ -32,8 +40,8 @@ $(document).ready(function(){
   var ball = {
     vel: 300,
     velAngle: 125,
-    bounce: 1.04,
-    gravity: 450
+    bounce: 1.02,
+    gravity: 400
   }
 
 
@@ -42,7 +50,7 @@ $(document).ready(function(){
     bindKeys();
     createHUD();
     initPhysics();
-    music = game.add.audio('soundtrack');
+    createSounds();
   }
 
   function update(){
@@ -129,6 +137,13 @@ $(document).ready(function(){
 
   }
 
+  function createSounds(){
+    music = game.add.audio('soundtrack');
+    blip = game.add.audio('blip');
+    blip2 = game.add.audio('blip2');
+    explosion = game.add.audio('explosion');
+  }
+
 
 
   //
@@ -136,8 +151,8 @@ $(document).ready(function(){
   //
 
   function checkCollisions(){
-    game.physics.arcade.collide(ball.sprite, walls, ballCollision, null, this);
-    game.physics.arcade.collide(ball.sprite, roof, ballCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, walls, ballWallCollision, null, this);
+    game.physics.arcade.collide(ball.sprite, roof, ballWallCollision, null, this);
     game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
     game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
   }
@@ -172,18 +187,23 @@ $(document).ready(function(){
   }
 
   function blockCollision(ballObj, blockObj){
-    ballCollision();
     blockObj.destroy();
+    explosion.play();
+  }
+
+  function ballWallCollision(){
+    blip2.play();
   }
 
   function ballCollision(){
-    // play a sound or something.
+    // maybe do something here.
   }
 
   function playerBallCollision(){
     var collisionLoc = (ball.sprite.x + (ball.sprite.width / 2) - player.sprite.x) / player.sprite.width;
     var newVel = Math.sqrt(Math.pow(ball.sprite.body.velocity.x, 2) + Math.pow(ball.sprite.body.velocity.y, 2));
     game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, ball.sprite.body.velocity);
+    blip.play();
   }
 
   function togglePause(){
@@ -204,7 +224,7 @@ $(document).ready(function(){
   function startGame(){
     if (!gameStarted){
       gameStarted = true;
-      music.play();
+        music.play();
       var complete = function(){
         gameStateText.text = '';
         game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
