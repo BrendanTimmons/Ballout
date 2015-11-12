@@ -6,7 +6,7 @@ $(document).ready(function(){
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');
     game.load.image('paddle', 'assets/player.png');
-    game.load.image('block', 'assets/block.gif');
+    game.load.image('block', 'assets/block.png');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
     game.load.json('level', 'levels/lvl1.json');
   }
