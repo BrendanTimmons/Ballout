@@ -19,7 +19,10 @@ $(document).ready(function(){
       roof,
       livesText,
       gameStateText,
+      score = 0,
       scoreText,
+      combo = 1,
+      comboText,
       gameStarted = false;
 
   var cursors,
@@ -76,8 +79,17 @@ $(document).ready(function(){
 
   function createHUD(){
     livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + player.lives, {fontSize: '20px', fill: '#ff5dbd'});
+    livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
     gameStateText = game.add.text(game.world.centerX, game.world.centerY - 50, "Press 'Spacebar' to start.", {fontSize: '40px', fill: '#ff5dbd'});
     gameStateText.anchor.set(0.5);
+    gameStateText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+    scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + score, {fontSize: '20px', fill: '#ff5dbd'});
+    scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+    comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + combo, {fontSize: '20px', fill: '#ff5dbd'});
+    comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
   }
 
   function bindKeys(){
@@ -159,6 +171,7 @@ $(document).ready(function(){
 
   function updateHUD(){
     livesText.text = 'Lives: ' + player.lives;
+    scoreText.text = 'Score: ' + score;
 
     if(blocks.children.length == 0){
       gameStateText.text = 'You Win!';
@@ -189,6 +202,9 @@ $(document).ready(function(){
   function blockCollision(ballObj, blockObj){
     blockObj.destroy();
     explosion.play();
+    score = score + (20 * combo);
+    comboText.text = 'Combo: x' + combo;
+    combo = combo + 1;
   }
 
   function ballWallCollision(){
@@ -204,6 +220,8 @@ $(document).ready(function(){
     var newVel = Math.sqrt(Math.pow(ball.sprite.body.velocity.x, 2) + Math.pow(ball.sprite.body.velocity.y, 2));
     game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, ball.sprite.body.velocity);
     blip.play();
+    combo = 1;
+    comboText.text = 'Combo: x' + combo;
   }
 
   function togglePause(){
