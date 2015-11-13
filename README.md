@@ -1,7 +1,7 @@
 # Ballout
 Arkanoid / Breakout Ripoff.
 
-http://brendantimmons.github.io/Ballout/
+http://ballout.puffy.dog
 
 ## Gameplay
 
