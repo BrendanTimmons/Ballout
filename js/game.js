@@ -7,10 +7,21 @@ $(document).ready(function(){
     game.load.image('star', 'assets/ball.png');
     game.load.image('paddle', 'assets/player.png');
     game.load.image('block', 'assets/block.png');
+
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
     game.load.audio('blip', 'assets/audio/blip.wav');
     game.load.audio('blip2', 'assets/audio/blip2.wav');
     game.load.audio('explosion', 'assets/audio/Explosion2.wav');
+
+    game.load.audio('godlike', 'assets/audio/godlike.mp3');
+    game.load.audio('combowhore', 'assets/audio/combowhore.mp3');
+    game.load.audio('holyshit', 'assets/audio/holyshit.mp3');
+    game.load.audio('impressive', 'assets/audio/impressive.mp3');
+    game.load.audio('rampage', 'assets/audio/rampage.mp3');
+    game.load.audio('triplekill', 'assets/audio/triplekill.mp3');
+    game.load.audio('unstoppable', 'assets/audio/unstoppable.mp3');
+    game.load.audio('wickedsick', 'assets/audio/wickedsick.mp3');
+
     game.load.json('level', 'levels/lvl1.json');
   }
   
@@ -33,7 +44,15 @@ $(document).ready(function(){
   var music,
       blip,
       blip2,
-      explosion
+      explosion,
+      godlike,
+      combowhore,
+      holyshit,
+      impressive,
+      rampage,
+      triplekill,
+      unstoppable,
+      wickedsick
 
   var player = {
     lives: 3,
@@ -160,6 +179,11 @@ $(document).ready(function(){
     blip = game.add.audio('blip');
     blip2 = game.add.audio('blip2');
     explosion = game.add.audio('explosion');
+    godlike = game.add.audio('godlike');
+    holyshit = game.add.audio('holyshit');
+    rampage = game.add.audio('rampage');
+    combowhore = game.add.audio('combowhore');
+    triplekill = game.add.audio('triplekill');
   }
 
 
@@ -210,6 +234,17 @@ $(document).ready(function(){
     explosion.play();
     score = score + (20 * combo);
     comboText.text = 'Combo: x' + combo;
+
+    if(combo == 3){
+      triplekill.play();
+    } else if (combo == 5){
+      rampage.play();
+    } else if (combo == 9){
+      holyshit.play();
+    } else if (combo == 12){
+      combowhore.play();
+    }
+
     combo = combo + 1;
   }
 
