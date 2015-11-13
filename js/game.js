@@ -174,12 +174,12 @@ $(document).ready(function(){
     scoreText.text = 'Score: ' + score;
 
     if(blocks.children.length == 0){
-      gameStateText.text = 'You Win!';
+      gameStateText.text = 'You Win! \n High Score: ' + score;
       ball.sprite.kill();
     }
 
     if(player.lives == 0){
-      gameStateText.text = 'Game Over!';
+      gameStateText.text = 'Game Over! \n High Score: ' + score;
       ball.sprite.kill();
     }
   }
