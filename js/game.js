@@ -134,12 +134,6 @@ $(document).ready(function(){
     wall.scale.setTo(0.05, 60);
     wall.body.immovable = true;
 
-    // THIS IS NOT A WALL, NEED TO FIX LATER
-    wall = walls.create(game.width / 2, game.world.centerY - 30, 'ground');
-    wall.scale.setTo(0.3, 0.5);
-    wall.anchor.set(0.5);
-    wall.body.immovable = true;
-
     roof = game.add.sprite(0, -10, 'ground');
     roof.scale.setTo(60, 1);
     game.physics.enable(roof, Phaser.Physics.ARCADE);
@@ -147,8 +141,14 @@ $(document).ready(function(){
 
     blocks = game.add.physicsGroup();
 
-
     var levelData = game.cache.getJSON('level');
+
+    levelData.platformData.forEach(function(ele){
+      wall = walls.create(ele.x, ele.y, ele.sprite);
+      wall.scale.setTo(0.3, 0.5);
+      wall.anchor.set(0.5);
+      wall.body.immovable = true;
+    });
 
     levelData.blockData.forEach(function(ele){
       var block = blocks.create(ele.x, ele.y, 'block');
@@ -215,9 +215,12 @@ $(document).ready(function(){
   }
 
   function movePlayer(){
-    if (cursors.left.isDown && player.sprite.x > game.world.bounds.left){
+
+    // THIS COLLISION DETECTION FUCKING SUCKS. FIGURE IT OUT
+
+    if (cursors.left.isDown && (player.sprite.x - player.sprite.width / 2) > game.world.bounds.left){
       player.sprite.body.velocity.x = -player.speed;
-    } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width) < game.world.bounds.right){
+    } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width + 30) < game.world.bounds.right){
       player.sprite.body.velocity.x = player.speed;
     } else {
       player.sprite.body.velocity.x = 0;
@@ -246,6 +249,16 @@ $(document).ready(function(){
     }
 
     combo = combo + 1;
+
+    $("body").css({
+      'backgroundColor':"#4e404f"
+    });
+
+    setTimeout(function(){
+    $("body").css({
+      'backgroundColor':"#3f3440"
+    });
+    }, 250);
   }
 
   function ballWallCollision(){
@@ -270,7 +283,7 @@ $(document).ready(function(){
   }
 
   function outOfBounds(){
-    if(ball.sprite.y > game.world.height){
+    if(ball.sprite.y > game.world.height || ball.sprite.x < 0 || ball.sprite.x > game.world.width){
       player.lives -= 1;
       resetBall();
     }

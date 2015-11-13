@@ -49,6 +49,18 @@
     {"x": 450, "y": 190, "type": "normal"},
     {"x": 500, "y": 190, "type": "normal"},
     {"x": 550, "y": 190, "type": "normal"},
-    {"x": 600, "y": 190, "type": "normal"}
+    {"x": 600, "y": 190, "type": "normal"},
+
+    {"x": 300, "y": 220, "type": "normal"},
+    {"x": 350, "y": 220, "type": "normal"},
+    {"x": 400, "y": 220, "type": "normal"},
+    {"x": 450, "y": 220, "type": "normal"},
+
+    {"x": 350, "y": 250, "type": "normal"},
+    {"x": 400, "y": 250, "type": "normal"}
+  ],
+  "platformData": [
+    {"x": -10, "y": 250, "sprite": "ground"},
+    {"x": 810, "y": 250, "sprite": "ground"}
   ]
 }
