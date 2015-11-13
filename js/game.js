@@ -115,6 +115,12 @@ $(document).ready(function(){
     wall.scale.setTo(0.05, 60);
     wall.body.immovable = true;
 
+    // THIS IS NOT A WALL, NEED TO FIX LATER
+    wall = walls.create(game.width / 2, game.world.centerY - 30, 'ground');
+    wall.scale.setTo(0.3, 0.5);
+    wall.anchor.set(0.5);
+    wall.body.immovable = true;
+
     roof = game.add.sprite(0, -10, 'ground');
     roof.scale.setTo(60, 1);
     game.physics.enable(roof, Phaser.Physics.ARCADE);

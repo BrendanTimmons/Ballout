@@ -28,15 +28,27 @@
 
     {"x": 100, "y": 120, "type": "normal"},
     {"x": 150, "y": 120, "type": "normal"},
+    {"x": 350, "y": 120, "type": "normal"},
+    {"x": 400, "y": 120, "type": "normal"},
+    {"x": 600, "y": 120, "type": "normal"},
+    {"x": 650, "y": 120, "type": "normal"},
+
+    {"x": 150, "y": 160, "type": "normal"},
     {"x": 200, "y": 160, "type": "normal"},
     {"x": 250, "y": 160, "type": "normal"},
     {"x": 300, "y": 160, "type": "normal"},
-    {"x": 350, "y": 120, "type": "normal"},
-    {"x": 400, "y": 120, "type": "normal"},
     {"x": 450, "y": 160, "type": "normal"},
     {"x": 500, "y": 160, "type": "normal"},
     {"x": 550, "y": 160, "type": "normal"},
-    {"x": 600, "y": 120, "type": "normal"},
-    {"x": 650, "y": 120, "type": "normal"}
+    {"x": 600, "y": 160, "type": "normal"},
+
+    {"x": 150, "y": 190, "type": "normal"},
+    {"x": 200, "y": 190, "type": "normal"},
+    {"x": 250, "y": 190, "type": "normal"},
+    {"x": 300, "y": 190, "type": "normal"},
+    {"x": 450, "y": 190, "type": "normal"},
+    {"x": 500, "y": 190, "type": "normal"},
+    {"x": 550, "y": 190, "type": "normal"},
+    {"x": 600, "y": 190, "type": "normal"}
   ]
 }
