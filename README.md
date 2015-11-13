@@ -11,6 +11,10 @@ The ball will slowly gain momentum with every bounce.
 
 Deflect the ball with your player by moving left and right, if the ball hits the bottom of the screen you lose a life.
 
+### Combos
+
+Each block is worth 20 points. Hitting multiple blocks without hitting the player ship increases the combo multiplier by 1 per block. Combo multiplier is reset when the ball hits the player ship.
+
 ## Controls
 
 Left / Right moves player
