@@ -176,6 +176,10 @@ function updateHUD(){
   if(blocks.children.length == 0){
     gameStateText.text = 'You Win! \n High Score: ' + score;
     ball.sprite.kill();
+
+    setTimeout(function(){
+      game.state.start('complete');
+    }, 3000);
   }
 
   if(player.lives == 0){
@@ -268,6 +272,7 @@ var tick = function(counter){
 }
 
 function startGame(){
+  music.loop = true;
   music.play();
   var complete = function(){
     gameStateText.text = '';

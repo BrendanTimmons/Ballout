@@ -9,7 +9,8 @@ var menuState = {
     enterKey.onDown.addOnce(this.start, this);
 
 
-    music = game.add.audio('soundtrack-menu');
+    music = game.add.audio('soundtrackMenu');
+    music.loop = true;
     music.play();
   },
 

@@ -3,6 +3,8 @@ var loadState = {
     var loadingText = game.add.text(game.world.centerX, game.world.centerY, "Loading...", {font: "16px Arial", fill: "#ffffff"});
     loadingText.anchor.set(0.5);
 
+    game.load.spritesheet('loader', 'assets/loading.png', 160, 24);
+
     game.load.image('splashbg', 'assets/splash-bg.jpg');
     game.load.image('bg', 'assets/balloutbg.jpg');
     game.load.image('ground', 'assets/platform.png');
@@ -10,7 +12,7 @@ var loadState = {
     game.load.image('paddle', 'assets/player.png');
     game.load.image('block', 'assets/block.png');
 
-    game.load.audio('soundtrack-menu', 'assets/audio/trash80-missing-you.mp3');
+    game.load.audio('soundtrackMenu', 'assets/audio/trash80-missing-you.mp3');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
     game.load.audio('blip', 'assets/audio/blip.wav');
     game.load.audio('blip2', 'assets/audio/blip2.wav');
@@ -30,8 +32,12 @@ var loadState = {
   },
 
   create: function(){
-    game.sound.setDecodedCallback('soundtrack-menu', loadComplete, this);
+    game.sound.setDecodedCallback('soundtrackMenu', loadComplete, this);
 
+    var loadingBar = game.add.sprite(game.width / 2, game.height / 2.2, 'loader');
+    loadingBar.anchor.setTo(0.5, 1);
+    var loading = loadingBar.animations.add('loading');
+    loadingBar.animations.play('loading', 30, true);
   }
 };
 
