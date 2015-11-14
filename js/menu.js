@@ -7,8 +7,8 @@ var menuState = {
     startText = game.add.text(game.world.centerX / 2, game.world.centerY + 50, "Press Enter to start", {fontSize: '40px', fill: '#ff5dbd'});
     startText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-    var enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
+    enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     enterKey.onDown.addOnce(this.start, this);
 
 
@@ -20,7 +20,6 @@ var menuState = {
   update: function(){
     timer += game.time.elapsed;
     if(timer >= 600){
-      console.log("ass");
       timer -= 600;
       startText.visible = !startText.visible;
     }

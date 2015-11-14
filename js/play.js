@@ -30,7 +30,8 @@ var blocks,
 
 var cursors,
     shift,
-    esc;
+    esc,
+    enter;
 
 var music,
     blip,
@@ -178,7 +179,7 @@ function updateHUD(){
     ball.sprite.kill();
 
     setTimeout(function(){
-      game.state.start('complete');
+      game.state.start('complete', true, true);
     }, 3000);
   }
 
@@ -187,7 +188,7 @@ function updateHUD(){
     ball.sprite.kill();
 
     setTimeout(function(){
-      game.state.start('complete');
+      game.state.start('complete', true, true);
     }, 3000);
   }
 }
