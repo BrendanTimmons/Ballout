@@ -1,8 +1,7 @@
-var loadState = {
-  preload: function(){
-    var loadingText = game.add.text(game.world.centerX, game.world.centerY, "Loading...", {font: "16px Arial", fill: "#ffffff"});
-    loadingText.anchor.set(0.5);
+var loadState = function(game){}
 
+loadState.prototype = {
+  preload: function(){
     game.load.spritesheet('loader', 'assets/loading.png', 160, 24);
 
     game.load.image('splashbg', 'assets/splash-bg.jpg');
@@ -32,12 +31,16 @@ var loadState = {
   },
 
   create: function(){
-    game.sound.setDecodedCallback('soundtrackMenu', loadComplete, this);
-
     var loadingBar = game.add.sprite(game.width / 2, game.height / 2.2, 'loader');
     loadingBar.anchor.setTo(0.5, 1);
+
     var loading = loadingBar.animations.add('loading');
     loadingBar.animations.play('loading', 30, true);
+
+    var loadingText = game.add.text(game.world.centerX, game.world.centerY, "Loading...", {font: "16px Arial", fill: "#ffffff"});
+    loadingText.anchor.set(0.5);
+
+    game.sound.setDecodedCallback('soundtrackMenu', loadComplete, this);
   }
 };
 

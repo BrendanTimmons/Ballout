@@ -28,11 +28,6 @@ var blocks,
     comboText,
     gameStarted = false;
 
-var cursors,
-    shift,
-    esc,
-    enter;
-
 var music,
     blip,
     blip2,
@@ -44,11 +39,12 @@ var music,
     rampage,
     triplekill,
     unstoppable,
-    wickedsick
+    wickedsick;
 
 var player = {
   lives: 3,
-  speed: 400
+  speed: 400,
+  name: "NUL"
 }
 
 var ball = {
@@ -84,13 +80,6 @@ function createHUD(){
   comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 }
 
-function bindKeys(){
-  cursors = game.input.keyboard.createCursorKeys();
-  shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
-
-  esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-  esc.onDown.add(togglePause, this);
-}
 
 function createLevel(){
   game.add.sprite(0,0, 'bg');
@@ -145,14 +134,31 @@ function initPhysics(){
 
 function createSounds(){
   music = game.add.audio('soundtrack');
+  music.volume = config.musicVol;
+
   blip = game.add.audio('blip');
+  blip.volume = config.sfxVol * 0.5;
+
   blip2 = game.add.audio('blip2');
+  blip2.volume = config.sfxVol * 0.5;
+
   explosion = game.add.audio('explosion');
+  explosion.volume = config.sfxVol * 0.4;
+
   godlike = game.add.audio('godlike');
+  godlike.volume = config.sfxVol * 1;
+
   holyshit = game.add.audio('holyshit');
+  holyshit.volume = config.sfxVol * 1;
+
   rampage = game.add.audio('rampage');
+  rampage.volume = config.sfxVol * 1;
+
   combowhore = game.add.audio('combowhore');
+  combowhore.volume = config.sfxVol * 1;
+
   triplekill = game.add.audio('triplekill');
+  triplekill.volume = config.sfxVol * 1;
 }
 
 
