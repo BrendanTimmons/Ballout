@@ -58,6 +58,19 @@ function loadComplete(){
   game.state.start('menu');
 }
 
+var music,
+    blip,
+    blip2,
+    explosion,
+    godlike,
+    combowhore,
+    holyshit,
+    impressive,
+    rampage,
+    triplekill,
+    unstoppable,
+    wickedsick;
+
 function loadSounds(){
   music = game.add.audio('soundtrack');
   blip = game.add.audio('blip');

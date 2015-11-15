@@ -1,20 +1,184 @@
 var playState = {
+  init: function(){
+    this.player = {
+      lives: 3,
+      speed: 400,
+      name: "NUL"
+    }
+
+    this.ball = {
+      vel: 300,
+      velAngle: 125,
+      bounce: 1.02,
+      gravity: 400
+    }
+  },
+
+
+
+
+  //////////////////////////////////////////
+  // CREATE                               //
+  //////////////////////////////////////////
+
   create: function(){
-    createLevel();
-    bindKeys();
-    createHUD();
-    initPhysics();
+    this.createLevel();
+    this.createHUD();
+    this.initPhysics();
+    this.startGame();
     audioVol();
-    startGame();
+
     space.onDown.add(togglePause);
     esc.onDown.addOnce(returnToMenu);
   },
 
+
+  createHUD: function(){
+    livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + this.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
+    livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+    pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
+    pauseText.anchor.set(0.5);
+    pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    pauseText.visible = false;
+
+    gameStateText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
+    gameStateText.anchor.set(0.5);
+    gameStateText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+    scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + score, {fontSize: '20px', fill: '#ff5dbd'});
+    scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+    comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + combo, {fontSize: '20px', fill: '#ff5dbd'});
+    comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+  },
+
+  createLevel: function(){
+    var levelData = game.cache.getJSON('level' + selectedLevel);
+
+    game.add.sprite(0,0, levelData.levelBackground);
+    walls = game.add.physicsGroup();
+
+    var wall = walls.create(0, 0, 'ground');
+    wall.scale.setTo(0.05, 60);
+    wall.body.immovable = true;
+
+    wall = walls.create(game.width -20, 0, 'ground');
+    wall.scale.setTo(0.05, 60);
+    wall.body.immovable = true;
+
+    roof = game.add.sprite(0, -10, 'ground');
+    roof.scale.setTo(60, 1);
+    game.physics.enable(roof, Phaser.Physics.ARCADE);
+    roof.body.immovable = true;
+
+    blocks = game.add.physicsGroup();
+
+    levelData.platformData.forEach(function(ele){
+      wall = walls.create(ele.x, ele.y, ele.sprite);
+      wall.anchor.set(0.5);
+      wall.body.immovable = true;
+    });
+
+    levelData.blockData.forEach(function(ele){
+      var block = blocks.create(ele.x, ele.y, 'block');
+      block.body.immovable = true;
+    });
+
+
+    this.ball.sprite = this.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
+    this.player.sprite = this.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
+  },
+
+  initPhysics: function(){
+    walls.enableBody = true;
+    blocks.enableBody = true;
+
+    this.game.physics.enable(this.ball.sprite, Phaser.Physics.ARCADE);
+    this.ball.sprite.body.bounce.set(this.ball.bounce);
+
+    this.game.physics.enable(this.player.sprite, Phaser.Physics.ARCADE);
+    this.player.sprite.body.immovable = true;
+  },
+
+  startGame: function(){
+    music.loop = true;
+    music.play();
+
+    var complete = function(){
+      play.play();
+      gameStateText.text = '';
+      this.game.physics.arcade.velocityFromAngle(startAngle(), this.ball.vel, this.ball.sprite.body.velocity);
+      this.ball.sprite.body.gravity.y = this.ball.gravity;
+    };
+    countdown(tick, complete, 3);
+  },
+
+
+  //////////////////////////////////////////
+  // UPDATE                               //
+  //////////////////////////////////////////
+
   update: function(){
-    movePlayer();
-    updateHUD();
-    checkCollisions();
-    outOfBounds();
+    this.movePlayer();
+    this.updateHUD();
+    this.checkCollisions();
+    this.outOfBounds();
+  },
+
+  movePlayer: function(){
+    // THIS COLLISION DETECTION FUCKING SUCKS. FIGURE IT OUT
+
+    if (cursors.left.isDown && (this.player.sprite.x - this.player.sprite.width / 2) > game.world.bounds.left){
+      this.player.sprite.body.velocity.x = -this.player.speed;
+    } else if (cursors.right.isDown && (this.player.sprite.x + this.player.sprite.width + 30) < game.world.bounds.right){
+      this.player.sprite.body.velocity.x = this.player.speed;
+    } else {
+      this.player.sprite.body.velocity.x = 0;
+    }
+    if(shift.isDown){
+      this.player.speed = 800;
+    } else {
+      this.player.speed = 400;
+    }
+  },
+
+  updateHUD: function(){
+    livesText.text = 'Lives: ' + this.player.lives;
+    scoreText.text = 'Score: ' + score;
+
+    if(blocks.children.length == 0){
+      gameStateText.text = 'You Win! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
+      gameStateText.x = game.world.centerX;
+      this.ball.sprite.kill();
+
+      enter.onDown.addOnce(restartLevel);
+    }
+
+    if(this.player.lives == 0){
+      gameStateText.text = 'Game Over! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
+      gameStateText.x = game.world.centerX;
+      gameStateText.anchor.set(0.5);
+      this.ball.sprite.kill();
+
+      enter.onDown.addOnce(restartLevel);
+    }
+  },
+
+  checkCollisions: function(){
+    game.physics.arcade.collide(this.ball.sprite, walls, ballWallCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, roof, ballWallCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, blocks, blockCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, this.player.sprite, playerBallCollision, null, this);
+  },
+
+  outOfBounds: function(){
+    if(this.player.lives && this.ball.sprite.y > game.world.height || this.ball.sprite.x < 0 || this.ball.sprite.x > game.world.width){
+      this.player.lives -= 1;
+      if(this.player.lives){
+        resetBall();
+      }
+    }
   }
 }
 
@@ -31,164 +195,12 @@ var blocks,
     comboText,
     gameStarted = false;
 
-var music,
-    blip,
-    blip2,
-    explosion,
-    godlike,
-    combowhore,
-    holyshit,
-    impressive,
-    rampage,
-    triplekill,
-    unstoppable,
-    wickedsick;
-
-var player = {
-  lives: 3,
-  speed: 400,
-  name: "NUL"
-}
-
-var ball = {
-  vel: 300,
-  velAngle: 125,
-  bounce: 1.02,
-  gravity: 400
-}
 
 
 
-//
-// CREATE WORLD
-//
 
 function startAngle(){
   return 67.5 + (Math.random() * 45);
-}
-
-function createHUD(){
-  livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + player.lives, {fontSize: '20px', fill: '#ff5dbd'});
-  livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-
-  pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
-  pauseText.anchor.set(0.5);
-  pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-  pauseText.visible = false;
-
-  gameStateText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
-  gameStateText.anchor.set(0.5);
-  gameStateText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-
-  scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + score, {fontSize: '20px', fill: '#ff5dbd'});
-  scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-
-  comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + combo, {fontSize: '20px', fill: '#ff5dbd'});
-  comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-}
-
-
-function createLevel(){
-  var levelData = game.cache.getJSON('level' + selectedLevel);
-
-  game.add.sprite(0,0, levelData.levelBackground);
-  walls = game.add.physicsGroup();
-
-  var wall = walls.create(0, 0, 'ground');
-  wall.scale.setTo(0.05, 60);
-  wall.body.immovable = true;
-
-  wall = walls.create(game.width -20, 0, 'ground');
-  wall.scale.setTo(0.05, 60);
-  wall.body.immovable = true;
-
-  roof = game.add.sprite(0, -10, 'ground');
-  roof.scale.setTo(60, 1);
-  game.physics.enable(roof, Phaser.Physics.ARCADE);
-  roof.body.immovable = true;
-
-  blocks = game.add.physicsGroup();
-
-  levelData.platformData.forEach(function(ele){
-    wall = walls.create(ele.x, ele.y, ele.sprite);
-    wall.anchor.set(0.5);
-    wall.body.immovable = true;
-  });
-
-  levelData.blockData.forEach(function(ele){
-    var block = blocks.create(ele.x, ele.y, 'block');
-    block.body.immovable = true;
-  });
-
-
-  ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
-  player.sprite = game.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
-}
-
-function initPhysics(){
-  walls.enableBody = true;
-  blocks.enableBody = true;
-
-  game.physics.enable(ball.sprite, Phaser.Physics.ARCADE);
-  ball.sprite.body.bounce.set(ball.bounce);
-
-  game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
-  player.sprite.body.immovable = true;
-}
-
-
-
-
-
-//
-// GAMEPLAY UPDATES
-//
-
-function checkCollisions(){
-  game.physics.arcade.collide(ball.sprite, walls, ballWallCollision, null, this);
-  game.physics.arcade.collide(ball.sprite, roof, ballWallCollision, null, this);
-  game.physics.arcade.collide(ball.sprite, blocks, blockCollision, null, this);
-  game.physics.arcade.collide(ball.sprite, player.sprite, playerBallCollision, null, this);
-}
-
-function updateHUD(){
-  livesText.text = 'Lives: ' + player.lives;
-  scoreText.text = 'Score: ' + score;
-
-  if(blocks.children.length == 0){
-    gameStateText.text = 'You Win! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
-    gameStateText.x = game.world.centerX;
-    ball.sprite.kill();
-
-    enter.onDown.addOnce(restartLevel);
-  }
-
-  if(player.lives == 0){
-    gameStateText.text = 'Game Over! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
-    gameStateText.x = game.world.centerX;
-    gameStateText.anchor.set(0.5);
-    ball.sprite.kill();
-
-    enter.onDown.addOnce(restartLevel);
-  }
-}
-
-function movePlayer(){
-
-  // THIS COLLISION DETECTION FUCKING SUCKS. FIGURE IT OUT
-
-  if (cursors.left.isDown && (player.sprite.x - player.sprite.width / 2) > game.world.bounds.left){
-    player.sprite.body.velocity.x = -player.speed;
-  } else if (cursors.right.isDown && (player.sprite.x + player.sprite.width + 30) < game.world.bounds.right){
-    player.sprite.body.velocity.x = player.speed;
-  } else {
-    player.sprite.body.velocity.x = 0;
-  }
-  if(shift.isDown){
-    player.speed = 800;
-  } else {
-    player.speed = 400;
-  }
 }
 
 function blockCollision(ballObj, blockObj){
@@ -258,30 +270,12 @@ function togglePause(){
 }
 
 function outOfBounds(){
-  if(player.lives && ball.sprite.y > game.world.height || ball.sprite.x < 0 || ball.sprite.x > game.world.width){
-    player.lives -= 1;
-    if(player.lives){
-      resetBall();
-    }
-  }
 }
 
 var tick = function(counter){
   gameStateText.text = counter;
 }
 
-function startGame(){
-  music.loop = true;
-  music.play();
-
-  var complete = function(){
-    play.play();
-    gameStateText.text = '';
-    game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
-    ball.sprite.body.gravity.y = ball.gravity;
-  };
-  countdown(tick, complete, 3);
-}
 
 function resetBall(){
   ball.sprite.x = game.world.centerX;
