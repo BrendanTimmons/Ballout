@@ -6,7 +6,7 @@ var playState = {
     initPhysics();
     audioVol();
     startGame();
-    pause.onDown.add(togglePause);
+    space.onDown.add(togglePause);
   },
 
   update: function(){

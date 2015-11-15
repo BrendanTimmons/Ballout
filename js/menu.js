@@ -100,7 +100,7 @@ function bindKeys(){
   shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
   enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
   esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-  pause = game.input.keyboard.addKey(Phaser.Keyboard.P);
+  space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 }
 
 function blinkText(ele, speed){
