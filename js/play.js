@@ -4,8 +4,9 @@ var playState = {
     bindKeys();
     createHUD();
     initPhysics();
-    createSounds();
+    audioVol();
     startGame();
+    esc.onDown.add(togglePause, this);
   },
 
   update: function(){
@@ -72,7 +73,6 @@ function createHUD(){
   gameStateText.anchor.set(0.5);
   gameStateText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-
   scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + score, {fontSize: '20px', fill: '#ff5dbd'});
   scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
@@ -100,11 +100,10 @@ function createLevel(){
 
   blocks = game.add.physicsGroup();
 
-  var levelData = game.cache.getJSON('level');
+  var levelData = game.cache.getJSON('level' + selectedLevel);
 
   levelData.platformData.forEach(function(ele){
     wall = walls.create(ele.x, ele.y, ele.sprite);
-    wall.scale.setTo(0.3, 0.5);
     wall.anchor.set(0.5);
     wall.body.immovable = true;
   });
@@ -115,12 +114,11 @@ function createLevel(){
   });
 
 
-  ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY, 'star');
+  ball.sprite = game.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
   player.sprite = game.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
 }
 
 function initPhysics(){
-
   walls.enableBody = true;
   blocks.enableBody = true;
 
@@ -129,36 +127,6 @@ function initPhysics(){
 
   game.physics.enable(player.sprite, Phaser.Physics.ARCADE);
   player.sprite.body.immovable = true;
-
-}
-
-function createSounds(){
-  music = game.add.audio('soundtrack');
-  music.volume = config.musicVol;
-
-  blip = game.add.audio('blip');
-  blip.volume = config.sfxVol * 0.5;
-
-  blip2 = game.add.audio('blip2');
-  blip2.volume = config.sfxVol * 0.5;
-
-  explosion = game.add.audio('explosion');
-  explosion.volume = config.sfxVol * 0.4;
-
-  godlike = game.add.audio('godlike');
-  godlike.volume = config.sfxVol * 1;
-
-  holyshit = game.add.audio('holyshit');
-  holyshit.volume = config.sfxVol * 1;
-
-  rampage = game.add.audio('rampage');
-  rampage.volume = config.sfxVol * 1;
-
-  combowhore = game.add.audio('combowhore');
-  combowhore.volume = config.sfxVol * 1;
-
-  triplekill = game.add.audio('triplekill');
-  triplekill.volume = config.sfxVol * 1;
 }
 
 
@@ -182,6 +150,7 @@ function updateHUD(){
 
   if(blocks.children.length == 0){
     gameStateText.text = 'You Win! \n High Score: ' + score;
+    gameStateText.x = game.world.centerX;
     ball.sprite.kill();
 
     setTimeout(function(){
@@ -191,6 +160,7 @@ function updateHUD(){
 
   if(player.lives == 0){
     gameStateText.text = 'Game Over! \n High Score: ' + score;
+    gameStateText.x = game.world.centerX;
     ball.sprite.kill();
 
     setTimeout(function(){
@@ -225,11 +195,17 @@ function blockCollision(ballObj, blockObj){
 
   if(combo == 3){
     triplekill.play();
-  } else if (combo == 5){
-    rampage.play();
-  } else if (combo == 9){
-    holyshit.play();
+  } else if (combo == 7){
+    impressive.play();
   } else if (combo == 12){
+    holyshit.play();
+  } else if (combo == 18){
+    rampage.play();
+  } else if (combo == 22){
+    wickedsick.play();
+  } else if (combo == 28){
+    unstoppable.play();
+  } else if (combo == 30){
     combowhore.play();
   }
 
@@ -240,9 +216,9 @@ function blockCollision(ballObj, blockObj){
   });
 
   setTimeout(function(){
-  $("body").css({
-    'backgroundColor':"#3f3440"
-  });
+    $("body").css({
+      'backgroundColor':"#3f3440"
+    });
   }, 250);
 }
 
@@ -282,6 +258,7 @@ function startGame(){
   music.loop = true;
   music.play();
   var complete = function(){
+    play.play();
     gameStateText.text = '';
     game.physics.arcade.velocityFromAngle(startAngle(), ball.vel, ball.sprite.body.velocity);
     ball.sprite.body.gravity.y = ball.gravity;
@@ -291,7 +268,7 @@ function startGame(){
 
 function resetBall(){
   ball.sprite.x = game.world.centerX;
-  ball.sprite.y = game.world.centerY;
+  ball.sprite.y = game.world.centerY + 70;
   game.physics.arcade.velocityFromAngle(ball.velAngle, 0, ball.sprite.body.velocity);
   ball.sprite.body.gravity.y = 0;
 

@@ -1,5 +1,7 @@
 var startText,
-    timer = 0;
+    timer = 0,
+    menuStage = 1,
+    selectedLevel = 1;
 
 var cursors,
     shift,
@@ -16,25 +18,67 @@ var menuState = {
     bindKeys();
 
     game.add.sprite(0,0, 'splashbg');
-    startText = game.add.text(game.world.centerX / 2, game.world.centerY + 50, "Press Enter to start", {fontSize: '40px', fill: '#ff5dbd'});
+    startText = game.add.text(game.world.centerX, game.world.centerY + 50, "Press Enter to start", {fontSize: '40px', fill: '#ff5dbd'});
+    startText.anchor.set(0.5, 0);
     startText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-    enter.onDown.addOnce(this.start, this);
+    //enter.onDown.addOnce(this.start, this);
+    enter.onDown.addOnce(levelSelect);
 
-    music = game.add.audio('soundtrackMenu');
-    music.loop = true;
-    music.volume = config.musicVol;
-    music.play();
+    menuMusic = game.add.audio('soundtrackMenu');
+    menuMusic.loop = true;
+    menuMusic.volume = config.musicVol;
+    menuMusic.play();
   },
 
   update: function(){
-    blinkText(startText, 600);
+    if(menuStage == 1){
+      blinkText(startText, 600);
+    }
+    if(menuStage == 2){
+      blinkText(levelText, 600);
+    }
   },
 
   start: function(){
-    music.stop();
+    blip.play();
+    menuMusic.stop();
     game.state.start('play');
   }
+}
+
+function levelSelect(){
+  perfect.play();
+  menuStage = 2;
+  startText.visible = false;
+
+  selectLevelText = game.add.text(game.world.centerX - 50, game.world.centerY + 50, "Select level:", {fontSize: '40px', fill: '#ff5dbd'});
+  selectLevelText.anchor.set(0.5, 0);
+  selectLevelText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+  levelText = game.add.text(game.world.centerX + (selectLevelText.width / 2.5), game.world.centerY + 40, selectedLevel, {fontSize: '50px', fill: '#ff5dbd'});
+  levelText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+
+  // IMPROVE THIS LATER
+  cursors.right.onDown.add(function(){
+    if(selectedLevel < 2){
+      selectedLevel = selectedLevel + 1;
+      levelText.text = selectedLevel;
+    }
+  });
+  cursors.left.onDown.add(function(){
+    if(selectedLevel > 1){
+      selectedLevel = selectedLevel - 1;
+      levelText.text = selectedLevel;
+    }
+  });
+
+  enter.onDown.addOnce(menuState.start, this);
+  esc.onDown.addOnce(function(){
+    menuStage = 1;
+  });
+  
 }
 
 function bindKeys(){
@@ -43,7 +87,6 @@ function bindKeys(){
   enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
   esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-  esc.onDown.add(togglePause, this);
 }
 
 function blinkText(ele, speed){

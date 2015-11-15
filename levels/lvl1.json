@@ -60,7 +60,7 @@
     {"x": 400, "y": 250, "type": "normal"}
   ],
   "platformData": [
-    {"x": -10, "y": 250, "sprite": "ground"},
-    {"x": 810, "y": 250, "sprite": "ground"}
+    {"x": 60, "y": 340, "sprite": "platform"},
+    {"x": 740, "y": 340, "sprite": "platform"}
   ]
 }
