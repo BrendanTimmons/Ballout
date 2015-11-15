@@ -32,9 +32,8 @@ loadState.prototype = {
 
     game.load.json('level1', 'levels/lvl1.json');
     game.load.json('level2', 'levels/lvl2.json');
-  },
 
-  create: function(){
+
     var loadingBar = game.add.sprite(game.width / 2, game.height / 2.2, 'loader');
     loadingBar.anchor.setTo(0.5, 1);
 
@@ -43,6 +42,9 @@ loadState.prototype = {
 
     var loadingText = game.add.text(game.world.centerX, game.world.centerY, "Loading...", {font: "16px Arial", fill: "#ffffff"});
     loadingText.anchor.set(0.5);
+  },
+
+  create: function(){
 
     game.sound.setDecodedCallback('soundtrackMenu', loadComplete, this);
     loadSounds();
