@@ -42,12 +42,14 @@ var menuState = {
 
   start: function(){
     flashBg(); //this is in play.js maybe i need to clean up my functions
-    gum.play();
     explosion.play();
+    setTimeout(function(){
+      tastemyball.play();
+    }, 300);
     setTimeout(function(){
       game.state.start('play');
       menuMusic.stop();
-    }, 4500);
+    }, 2400);
   }
 }
 

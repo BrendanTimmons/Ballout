@@ -28,7 +28,7 @@ loadState.prototype = {
     game.load.audio('wickedsick', 'assets/audio/wickedsick.mp3');
     game.load.audio('perfect', 'assets/audio/perfect.mp3');
     game.load.audio('play', 'assets/audio/play.wav');
-    game.load.audio('gum', 'assets/audio/gum.wav');
+    game.load.audio('tastemyball', 'assets/audio/taste-my-ball.mp3');
 
     game.load.json('level1', 'levels/lvl1.json');
     game.load.json('level2', 'levels/lvl2.json');
@@ -73,7 +73,7 @@ function loadAnnouncer(){
   impressive = game.add.audio('impressive');
   perfect = game.add.audio('perfect');
   play = game.add.audio('play');
-  gum = game.add.audio('gum');
+  tastemyball = game.add.audio('tastemyball');
 }
 
 
