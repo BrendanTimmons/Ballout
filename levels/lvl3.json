@@ -1,0 +1,51 @@
+{
+  "blockData": [
+    {"x": 50, "y": 330, "type": "normal"},
+    {"x": 100, "y": 330, "type": "normal"},
+    {"x": 150, "y": 330, "type": "normal"},
+    {"x": 200, "y": 330, "type": "normal"},
+    {"x": 250, "y": 330, "type": "normal"},
+    {"x": 300, "y": 330, "type": "normal"},
+    {"x": 350, "y": 330, "type": "normal"},
+    {"x": 400, "y": 330, "type": "normal"},
+    {"x": 450, "y": 330, "type": "normal"},
+    {"x": 500, "y": 330, "type": "normal"},
+    {"x": 550, "y": 330, "type": "normal"},
+    {"x": 600, "y": 330, "type": "normal"},
+
+    {"x": 150, "y": 250, "type": "normal"},
+    {"x": 200, "y": 250, "type": "normal"},
+    {"x": 250, "y": 250, "type": "normal"},
+    {"x": 300, "y": 250, "type": "normal"},
+    {"x": 350, "y": 250, "type": "normal"},
+    {"x": 400, "y": 250, "type": "normal"},
+    {"x": 450, "y": 250, "type": "normal"},
+    {"x": 500, "y": 250, "type": "normal"},
+    {"x": 550, "y": 250, "type": "normal"},
+    {"x": 600, "y": 250, "type": "normal"},
+    {"x": 650, "y": 250, "type": "normal"},
+    {"x": 700, "y": 250, "type": "normal"},
+
+    {"x": 300, "y": 100, "type": "normal"},
+    {"x": 350, "y": 100, "type": "normal"},
+    {"x": 400, "y": 100, "type": "normal"},
+    {"x": 450, "y": 100, "type": "normal"},
+
+    {"x": 300, "y": 120, "type": "normal"},
+    {"x": 350, "y": 120, "type": "normal"},
+    {"x": 400, "y": 120, "type": "normal"},
+    {"x": 450, "y": 120, "type": "normal"},
+
+    {"x": 300, "y": 140, "type": "normal"},
+    {"x": 350, "y": 140, "type": "normal"},
+    {"x": 400, "y": 140, "type": "normal"},
+    {"x": 450, "y": 140, "type": "normal"}
+  ],
+  "platformData": [
+    {"x": 700, "y": 335, "sprite": "platform"},
+    {"x": 90, "y": 255, "sprite": "platform"},
+    {"x": 280, "y": 175, "sprite": "platform"},
+    {"x": 390, "y": 175, "sprite": "platform"},
+    {"x": 500, "y": 175, "sprite": "platform"}
+  ]
+}

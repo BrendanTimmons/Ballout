@@ -41,14 +41,17 @@ var menuState = {
   },
 
   start: function(){
-    blip.play();
-    menuMusic.stop();
-    game.state.start('play');
+    gum.play();
+    explosion.play();
+    setTimeout(function(){
+      game.state.start('play');
+      menuMusic.stop();
+    }, 4000);
   }
 }
 
 function levelSelect(){
-  perfect.play();
+  blip2.play();
   menuStage = 2;
   startText.visible = false;
 
@@ -62,22 +65,28 @@ function levelSelect(){
 
   // IMPROVE THIS LATER
   cursors.right.onDown.add(function(){
-    if(selectedLevel < 2){
+    if(selectedLevel < 3){
       selectedLevel = selectedLevel + 1;
       levelText.text = selectedLevel;
+      blip.play();
+    } else {
+      explosion.play();
     }
   });
   cursors.left.onDown.add(function(){
     if(selectedLevel > 1){
       selectedLevel = selectedLevel - 1;
       levelText.text = selectedLevel;
+      blip.play();
+    } else {
+      explosion.play();
     }
   });
 
-  enter.onDown.addOnce(menuState.start, this);
-  esc.onDown.addOnce(function(){
-    menuStage = 1;
-  });
+  enter.onDown.addOnce(menuState.start, true);
+ // esc.onDown.addOnce(function(){
+ //   menuStage = 1;
+ // });
   
 }
 
