@@ -5,7 +5,9 @@ loadState.prototype = {
     game.load.spritesheet('loader', 'assets/loading.png', 160, 24);
 
     game.load.image('splashbg', 'assets/splash-bg.jpg');
-    game.load.image('bg', 'assets/balloutbg.jpg');
+    game.load.image('bg1', 'assets/balloutbg1.jpg');
+    game.load.image('bg2', 'assets/balloutbg2.jpg');
+    game.load.image('bg3', 'assets/balloutbg3.jpg');
     game.load.image('ground', 'assets/ground.png');
     game.load.image('platform', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');

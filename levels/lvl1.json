@@ -62,5 +62,6 @@
   "platformData": [
     {"x": 60, "y": 340, "sprite": "platform"},
     {"x": 740, "y": 340, "sprite": "platform"}
-  ]
+  ],
+  "levelBackground": "bg1"
 }

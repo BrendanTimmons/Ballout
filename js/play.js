@@ -7,6 +7,7 @@ var playState = {
     audioVol();
     startGame();
     space.onDown.add(togglePause);
+    esc.onDown.addOnce(returnToMenu);
   },
 
   update: function(){
@@ -70,12 +71,12 @@ function createHUD(){
   livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + player.lives, {fontSize: '20px', fill: '#ff5dbd'});
   livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-  pauseText = game.add.text(game.world.centerX, game.world.centerY - 50, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
+  pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
   pauseText.anchor.set(0.5);
   pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
   pauseText.visible = false;
 
-  gameStateText = game.add.text(game.world.centerX, game.world.centerY - 50, "", {fontSize: '40px', fill: '#ff5dbd'});
+  gameStateText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
   gameStateText.anchor.set(0.5);
   gameStateText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
@@ -88,7 +89,9 @@ function createHUD(){
 
 
 function createLevel(){
-  game.add.sprite(0,0, 'bg');
+  var levelData = game.cache.getJSON('level' + selectedLevel);
+
+  game.add.sprite(0,0, levelData.levelBackground);
   walls = game.add.physicsGroup();
 
   var wall = walls.create(0, 0, 'ground');
@@ -105,8 +108,6 @@ function createLevel(){
   roof.body.immovable = true;
 
   blocks = game.add.physicsGroup();
-
-  var levelData = game.cache.getJSON('level' + selectedLevel);
 
   levelData.platformData.forEach(function(ele){
     wall = walls.create(ele.x, ele.y, ele.sprite);
@@ -160,7 +161,6 @@ function updateHUD(){
     ball.sprite.kill();
 
     enter.onDown.addOnce(restartLevel);
-    esc.onDown.addOnce(returnToMenu);
   }
 
   if(player.lives == 0){
@@ -170,7 +170,6 @@ function updateHUD(){
     ball.sprite.kill();
 
     enter.onDown.addOnce(restartLevel);
-    esc.onDown.addOnce(returnToMenu);
   }
 }
 
@@ -249,8 +248,13 @@ function playerBallCollision(){
 }
 
 function togglePause(){
-  game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
   pauseText.visible = !pauseText.visible;
+
+  if(game.physics.arcade.isPaused){
+    game.physics.arcade.isPaused = false;
+  } else {
+    game.physics.arcade.isPaused = true;
+  }
 }
 
 function outOfBounds(){

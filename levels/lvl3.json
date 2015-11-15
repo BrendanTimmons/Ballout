@@ -47,5 +47,6 @@
     {"x": 280, "y": 175, "sprite": "platform"},
     {"x": 390, "y": 175, "sprite": "platform"},
     {"x": 500, "y": 175, "sprite": "platform"}
-  ]
+  ],
+  "levelBackground": "bg3"
 }

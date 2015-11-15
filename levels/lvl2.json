@@ -73,5 +73,6 @@
   ],
   "platformData": [
     {"x": 395, "y": 175, "sprite": "platform"}
-  ]
+  ],
+  "levelBackground": "bg2"
 }
