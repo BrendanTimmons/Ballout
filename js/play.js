@@ -23,6 +23,7 @@ var blocks,
     roof,
     livesText,
     gameStateText,
+    pauseText,
     score = 0,
     scoreText,
     combo = 1,
@@ -68,6 +69,11 @@ function startAngle(){
 function createHUD(){
   livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + player.lives, {fontSize: '20px', fill: '#ff5dbd'});
   livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+
+  pauseText = game.add.text(game.world.centerX, game.world.centerY - 50, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
+  pauseText.anchor.set(0.5);
+  pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+  pauseText.visible = false;
 
   gameStateText = game.add.text(game.world.centerX, game.world.centerY - 50, "", {fontSize: '40px', fill: '#ff5dbd'});
   gameStateText.anchor.set(0.5);
@@ -244,6 +250,7 @@ function playerBallCollision(){
 
 function togglePause(){
   game.physics.arcade.isPaused = (game.physics.arcade.isPaused) ? false : true;
+  pauseText.visible = !pauseText.visible;
 }
 
 function outOfBounds(){
