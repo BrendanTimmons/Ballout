@@ -47,12 +47,13 @@ var menuState = {
     setTimeout(function(){
       game.state.start('play');
       menuMusic.stop();
-    }, 4000);
+    }, 4500);
   }
 }
 
 function levelSelect(){
-  blip2.play();
+  flashBg();
+  explosion.play();
   menuStage = 2;
   startText.visible = false;
 
@@ -71,7 +72,7 @@ function levelSelect(){
       levelText.text = selectedLevel;
       blip.play();
     } else {
-      explosion.play();
+      blip2.play();
     }
   });
   cursors.left.onDown.add(function(){
@@ -80,7 +81,7 @@ function levelSelect(){
       levelText.text = selectedLevel;
       blip.play();
     } else {
-      explosion.play();
+      blip2.play();
     }
   });
 
