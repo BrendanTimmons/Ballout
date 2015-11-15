@@ -1,6 +1,6 @@
 var startText,
     timer = 0,
-    menuStage = 1,
+    menuStage,
     selectedLevel = 1;
 
 var cursors,
@@ -16,6 +16,7 @@ var config = {
 var menuState = {
   create: function(){
     bindKeys();
+    menuStage = 1;
 
     game.add.sprite(0,0, 'splashbg');
     startText = game.add.text(game.world.centerX, game.world.centerY + 50, "Press Enter to start", {fontSize: '40px', fill: '#ff5dbd'});
@@ -98,7 +99,6 @@ function bindKeys(){
   cursors = game.input.keyboard.createCursorKeys();
   shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
   enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-
   esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
 }
 

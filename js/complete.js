@@ -10,11 +10,11 @@ var completeState = {
       gameStateText.anchor.set(0.5);
     }
 
-//    completeText = game.add.text(game.world.centerX, game.world.centerY + 150, "Press 'Enter' to replay level", {fontSize: '40px', fill: '#ff5dbd'});
- //   completeText.anchor.set(0.5);
+    completeText = game.add.text(game.world.centerX, game.world.centerY + 150, "Press 'Enter' to replay level", {fontSize: '40px', fill: '#ff5dbd'});
+    completeText.anchor.set(0.5);
 
-  //  enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-   // enterKey.onDown.addOnce(this.restart, this);
+    enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    enterKey.onDown.addOnce(this.restart, this);
   },
 
   restart: function(){
@@ -22,7 +22,7 @@ var completeState = {
 
     player.lives = 3;
 
-    game.state.start('menu', true, true);
+    game.state.start('menu', true, false);
   }
 }
 

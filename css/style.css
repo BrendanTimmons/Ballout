@@ -1,11 +1,15 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,900italic,900);
 body {
   background: #3f3440;
-  font-family: sans-serif;
-  color: #ff5dbd;
-  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  color: #d1a9e5;
+  letter-spacing: 0.04em;
   padding: 0;
   margin: 0;
   transition: all 0.25s; }
+
+h1 {
+  margin-top: 0; }
 
 a {
   color: inherit; }
@@ -18,17 +22,30 @@ span {
   bottom: 10px;
   right: 10px; }
 
+li {
+  margin: 1em 0; }
+
 .container {
-  display: block;
+  align-items: flex-start;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
   margin: 0 auto;
-  width: 800px; }
+  width: 100%; }
 
 #game-canvas {
   box-shadow: 0px 0px 15px 0px #ff5dbd;
+  margin: 20px;
   -webkit-animation: pulse 0.45s infinite;
   -moz-animation: pulse 0.45s infinite;
   -o-animation: pulse 0.45s infinite;
   animation: pulse 0.45s infinite; }
+
+.game-info {
+  display: block;
+  margin: 20px 0;
+  padding: 0 10px;
+  max-width: 300px; }
 
 @-webkit-keyframes pulse {
   0% {

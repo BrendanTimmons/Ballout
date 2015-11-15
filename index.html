@@ -5,6 +5,7 @@
     <title>Ballout</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link href='https://fonts.googleapis.com/css?family=Orbitron:900,500' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -18,12 +19,31 @@
   </head>
   <body>
     <div class="container">
-      <h1>Ballout!</h1>
-      <p><strong>Controls:</strong> <strong>Move Player</strong> Left / Right | <strong>Speed Boost</strong> Shift | <strong>Pause</strong> Esc</p>
 
       <div id="game-canvas"></div>
 
-      <span>&#9835; Music: <a href="http://trash80.com/" target="_blank">Trash80</a></span>
+      <div class="game-info">
+        <h1>Ballout</h1>
+
+        <h2>Controls</h2>
+        <ul>
+          <li><strong>Move Player:</strong> Left / Right</li>
+          <li><strong>Speed Boost:</strong> Shift</li>
+          <li><strong>Pause:</strong> Esc</li>
+        </ul>
+
+        <h2>Gameplay</h2>
+
+        <ul>
+          <li>Destroy the blocks without missing the ball.</li>
+          <li>Move your ship to deflect the ball.</li>
+          <li>The ball speeds up every time it hits an object.</li>
+          <li>Increase your score by killing blocks (20 points) and increase your combo multiplier by 1 for every block you hit in a row. When the ball hits the player ship the combo multiplier is reset.</li>
+        </ul>
+
+
+        <span>&#9835; Music: <a href="http://trash80.com/" target="_blank">Trash80</a></span>
+      </div>
     </div>
   </body>
 </html>

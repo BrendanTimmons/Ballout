@@ -6,7 +6,6 @@ var playState = {
     initPhysics();
     audioVol();
     startGame();
-    esc.onDown.add(togglePause, this);
   },
 
   update: function(){
@@ -149,23 +148,22 @@ function updateHUD(){
   scoreText.text = 'Score: ' + score;
 
   if(blocks.children.length == 0){
-    gameStateText.text = 'You Win! \n High Score: ' + score;
+    gameStateText.text = 'You Win! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
     gameStateText.x = game.world.centerX;
     ball.sprite.kill();
 
-    setTimeout(function(){
-      game.state.start('complete', true, true);
-    }, 3000);
+    enter.onDown.addOnce(restartLevel);
+    esc.onDown.addOnce(returnToMenu);
   }
 
   if(player.lives == 0){
-    gameStateText.text = 'Game Over! \n High Score: ' + score;
+    gameStateText.text = 'Game Over! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
     gameStateText.x = game.world.centerX;
+    gameStateText.anchor.set(0.5);
     ball.sprite.kill();
 
-    setTimeout(function(){
-      game.state.start('complete', true, true);
-    }, 3000);
+    enter.onDown.addOnce(restartLevel);
+    esc.onDown.addOnce(returnToMenu);
   }
 }
 
@@ -248,9 +246,11 @@ function togglePause(){
 }
 
 function outOfBounds(){
-  if(ball.sprite.y > game.world.height || ball.sprite.x < 0 || ball.sprite.x > game.world.width){
+  if(player.lives && ball.sprite.y > game.world.height || ball.sprite.x < 0 || ball.sprite.x > game.world.width){
     player.lives -= 1;
-    resetBall();
+    if(player.lives){
+      resetBall();
+    }
   }
 }
 
@@ -261,6 +261,7 @@ var tick = function(counter){
 function startGame(){
   music.loop = true;
   music.play();
+
   var complete = function(){
     play.play();
     gameStateText.text = '';
@@ -294,4 +295,21 @@ function countdown(tick, complete, counter){
   } else {
     complete();
   }
+}
+
+function restartLevel(){
+  player.lives = 3;
+  score = 0;
+  combo = 1;
+
+  game.state.restart();
+}
+
+function returnToMenu(){
+  player.lives = 3;
+  score = 0;
+  combo = 1;
+  music.stop();
+
+  game.state.start('menu');
 }
