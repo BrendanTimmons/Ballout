@@ -32,6 +32,7 @@ loadState.prototype = {
 
     game.load.json('level1', 'levels/lvl1.json');
     game.load.json('level2', 'levels/lvl2.json');
+    game.load.json('level3', 'levels/lvl2.json');
 
     var loadingText = game.add.text(game.world.centerX, game.world.centerY, "Loading...", {font: "16px Arial", fill: "#ffffff"});
     loadingText.anchor.set(0.5);
