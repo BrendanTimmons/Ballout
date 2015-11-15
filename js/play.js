@@ -211,6 +211,10 @@ function blockCollision(ballObj, blockObj){
 
   combo = combo + 1;
 
+  flashBg();
+}
+
+function flashBg(){
   $("body").css({
     'backgroundColor':"#4e404f"
   });

@@ -41,6 +41,7 @@ var menuState = {
   },
 
   start: function(){
+    flashBg(); //this is in play.js maybe i need to clean up my functions
     gum.play();
     explosion.play();
     setTimeout(function(){
