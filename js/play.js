@@ -29,7 +29,7 @@ var playState = {
     audioVol();
 
     space.onDown.add(togglePause);
-    esc.onDown.addOnce(returnToMenu);
+    esc.onDown.addOnce(this.returnToMenu);
   },
 
 
@@ -108,10 +108,10 @@ var playState = {
     var complete = function(){
       play.play();
       gameStateText.text = '';
-      this.game.physics.arcade.velocityFromAngle(startAngle(), this.ball.vel, this.ball.sprite.body.velocity);
-      this.ball.sprite.body.gravity.y = this.ball.gravity;
+      playState.game.physics.arcade.velocityFromAngle(startAngle(), playState.ball.vel, playState.ball.sprite.body.velocity);
+      playState.ball.sprite.body.gravity.y = playState.ball.gravity;
     };
-    countdown(tick, complete, 3);
+    this.countdown(tick, complete, 3);
   },
 
 
@@ -152,7 +152,7 @@ var playState = {
       gameStateText.x = game.world.centerX;
       this.ball.sprite.kill();
 
-      enter.onDown.addOnce(restartLevel);
+      enter.onDown.addOnce(this.restartLevel);
     }
 
     if(this.player.lives == 0){
@@ -161,26 +161,114 @@ var playState = {
       gameStateText.anchor.set(0.5);
       this.ball.sprite.kill();
 
-      enter.onDown.addOnce(restartLevel);
+      enter.onDown.addOnce(this.restartLevel);
     }
   },
 
   checkCollisions: function(){
-    game.physics.arcade.collide(this.ball.sprite, walls, ballWallCollision, null, this);
-    game.physics.arcade.collide(this.ball.sprite, roof, ballWallCollision, null, this);
-    game.physics.arcade.collide(this.ball.sprite, blocks, blockCollision, null, this);
-    game.physics.arcade.collide(this.ball.sprite, this.player.sprite, playerBallCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, walls, this.ballWallCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, roof, this.ballWallCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, blocks, this.blockCollision, null, this);
+    game.physics.arcade.collide(this.ball.sprite, this.player.sprite, this.playerBallCollision, null, this);
   },
 
   outOfBounds: function(){
     if(this.player.lives && this.ball.sprite.y > game.world.height || this.ball.sprite.x < 0 || this.ball.sprite.x > game.world.width){
       this.player.lives -= 1;
       if(this.player.lives){
-        resetBall();
+        this.resetBall();
       }
+    }
+  },
+
+  blockCollision: function(ballObj, blockObj){
+    blockObj.destroy();
+    explosion.play();
+    score = score + (20 * combo);
+    comboText.text = 'Combo: x' + combo;
+
+    if(combo == 3){
+      triplekill.play();
+    } else if (combo == 7){
+      impressive.play();
+    } else if (combo == 12){
+      holyshit.play();
+    } else if (combo == 18){
+      rampage.play();
+    } else if (combo == 22){
+      wickedsick.play();
+    } else if (combo == 28){
+      unstoppable.play();
+    } else if (combo == 30){
+      combowhore.play();
+    }
+
+    combo = combo + 1;
+
+    flashBg();
+  },
+
+  ballWallCollision: function(){
+    blip2.play();
+  },
+
+  ballCollision: function(){
+    // maybe do something here.
+  },
+
+  playerBallCollision: function(){
+    var collisionLoc = (this.ball.sprite.x + (this.ball.sprite.width / 2) - this.player.sprite.x) / this.player.sprite.width;
+    var newVel = Math.sqrt(Math.pow(this.ball.sprite.body.velocity.x, 2) + Math.pow(this.ball.sprite.body.velocity.y, 2));
+    game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, this.ball.sprite.body.velocity);
+    blip.play();
+    combo = 1;
+    comboText.text = 'Combo: x' + combo;
+  },
+
+  resetBall: function(){
+    this.ball.sprite.x = game.world.centerX;
+    this.ball.sprite.y = game.world.centerY + 70;
+    game.physics.arcade.velocityFromAngle(this.ball.velAngle, 0, this.ball.sprite.body.velocity);
+    this.ball.sprite.body.gravity.y = 0;
+
+    var complete = function(){
+      gameStateText.text = '';
+      game.physics.arcade.velocityFromAngle(startAngle(), 300, playState.ball.sprite.body.velocity);
+      playState.ball.sprite.body.gravity.y = playState.ball.gravity;
+    };
+    this.countdown(tick, complete, 3);
+  },
+
+  restartLevel: function(){
+    playState.player.lives = 3;
+    score = 0;
+    combo = 1;
+
+    game.state.restart();
+  },
+
+  returnToMenu: function(){
+    playState.player.lives = 3;
+    score = 0;
+    combo = 1;
+    music.stop();
+
+    game.state.start('menu');
+  },
+
+  countdown: function(tick, complete, counter){
+    if (counter > 0){
+      tick(counter);
+      counter --;
+      setTimeout(function(){
+        playState.countdown(tick, complete, counter);
+      }, 1000);
+    } else {
+      complete();
     }
   }
 }
+// end game state
 
 
 var blocks,
@@ -195,40 +283,10 @@ var blocks,
     comboText,
     gameStarted = false;
 
-
-
-
-
 function startAngle(){
   return 67.5 + (Math.random() * 45);
 }
 
-function blockCollision(ballObj, blockObj){
-  blockObj.destroy();
-  explosion.play();
-  score = score + (20 * combo);
-  comboText.text = 'Combo: x' + combo;
-
-  if(combo == 3){
-    triplekill.play();
-  } else if (combo == 7){
-    impressive.play();
-  } else if (combo == 12){
-    holyshit.play();
-  } else if (combo == 18){
-    rampage.play();
-  } else if (combo == 22){
-    wickedsick.play();
-  } else if (combo == 28){
-    unstoppable.play();
-  } else if (combo == 30){
-    combowhore.play();
-  }
-
-  combo = combo + 1;
-
-  flashBg();
-}
 
 function flashBg(){
   $("body").css({
@@ -242,22 +300,6 @@ function flashBg(){
   }, 250);
 }
 
-function ballWallCollision(){
-  blip2.play();
-}
-
-function ballCollision(){
-  // maybe do something here.
-}
-
-function playerBallCollision(){
-  var collisionLoc = (ball.sprite.x + (ball.sprite.width / 2) - player.sprite.x) / player.sprite.width;
-  var newVel = Math.sqrt(Math.pow(ball.sprite.body.velocity.x, 2) + Math.pow(ball.sprite.body.velocity.y, 2));
-  game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, ball.sprite.body.velocity);
-  blip.play();
-  combo = 1;
-  comboText.text = 'Combo: x' + combo;
-}
 
 function togglePause(){
   pauseText.visible = !pauseText.visible;
@@ -277,45 +319,5 @@ var tick = function(counter){
 }
 
 
-function resetBall(){
-  ball.sprite.x = game.world.centerX;
-  ball.sprite.y = game.world.centerY + 70;
-  game.physics.arcade.velocityFromAngle(ball.velAngle, 0, ball.sprite.body.velocity);
-  ball.sprite.body.gravity.y = 0;
 
-  var complete = function(){
-    gameStateText.text = '';
-    game.physics.arcade.velocityFromAngle(startAngle(), 300, ball.sprite.body.velocity);
-    ball.sprite.body.gravity.y = ball.gravity;
-  };
-  countdown(tick, complete, 3);
-}
 
-function countdown(tick, complete, counter){
-  if (counter > 0){
-    tick(counter);
-    counter --;
-    setTimeout(function(){
-      countdown(tick, complete, counter);
-    }, 1000);
-  } else {
-    complete();
-  }
-}
-
-function restartLevel(){
-  player.lives = 3;
-  score = 0;
-  combo = 1;
-
-  game.state.restart();
-}
-
-function returnToMenu(){
-  player.lives = 3;
-  score = 0;
-  combo = 1;
-  music.stop();
-
-  game.state.start('menu');
-}
