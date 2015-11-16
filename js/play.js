@@ -1,12 +1,12 @@
 var playState = {
   init: function(){
-    this.player = {
+    playState.player = {
       lives: 3,
       speed: 400,
       name: "NUL"
     }
 
-    this.ball = {
+    playState.ball = {
       vel: 300,
       velAngle: 125,
       bounce: 1.02,
@@ -22,19 +22,19 @@ var playState = {
   //////////////////////////////////////////
 
   create: function(){
-    this.createLevel();
-    this.createHUD();
-    this.initPhysics();
-    this.startGame();
+    playState.createLevel();
+    playState.createHUD();
+    playState.initPhysics();
+    playState.startGame();
     audioVol();
 
     space.onDown.add(togglePause);
-    esc.onDown.addOnce(this.returnToMenu);
+    esc.onDown.addOnce(playState.returnToMenu);
   },
 
 
   createHUD: function(){
-    livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + this.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
+    livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + playState.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
     livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
     pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
@@ -86,19 +86,19 @@ var playState = {
     });
 
 
-    this.ball.sprite = this.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
-    this.player.sprite = this.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
+    playState.ball.sprite = playState.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
+    playState.player.sprite = playState.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
   },
 
   initPhysics: function(){
     walls.enableBody = true;
     blocks.enableBody = true;
 
-    this.game.physics.enable(this.ball.sprite, Phaser.Physics.ARCADE);
-    this.ball.sprite.body.bounce.set(this.ball.bounce);
+    playState.game.physics.enable(playState.ball.sprite, Phaser.Physics.ARCADE);
+    playState.ball.sprite.body.bounce.set(playState.ball.bounce);
 
-    this.game.physics.enable(this.player.sprite, Phaser.Physics.ARCADE);
-    this.player.sprite.body.immovable = true;
+    playState.game.physics.enable(playState.player.sprite, Phaser.Physics.ARCADE);
+    playState.player.sprite.body.immovable = true;
   },
 
   startGame: function(){
@@ -111,7 +111,7 @@ var playState = {
       playState.game.physics.arcade.velocityFromAngle(startAngle(), playState.ball.vel, playState.ball.sprite.body.velocity);
       playState.ball.sprite.body.gravity.y = playState.ball.gravity;
     };
-    this.countdown(tick, complete, 3);
+    playState.countdown(tick, complete, 3);
   },
 
 
@@ -120,63 +120,63 @@ var playState = {
   //////////////////////////////////////////
 
   update: function(){
-    this.movePlayer();
-    this.updateHUD();
-    this.checkCollisions();
-    this.outOfBounds();
+    playState.movePlayer();
+    playState.updateHUD();
+    playState.checkCollisions();
+    playState.outOfBounds();
   },
 
   movePlayer: function(){
     // THIS COLLISION DETECTION FUCKING SUCKS. FIGURE IT OUT
 
-    if (cursors.left.isDown && (this.player.sprite.x - this.player.sprite.width / 2) > game.world.bounds.left){
-      this.player.sprite.body.velocity.x = -this.player.speed;
-    } else if (cursors.right.isDown && (this.player.sprite.x + this.player.sprite.width + 30) < game.world.bounds.right){
-      this.player.sprite.body.velocity.x = this.player.speed;
+    if (cursors.left.isDown && (playState.player.sprite.x - playState.player.sprite.width / 2) > game.world.bounds.left){
+      playState.player.sprite.body.velocity.x = -playState.player.speed;
+    } else if (cursors.right.isDown && (playState.player.sprite.x + playState.player.sprite.width + 30) < game.world.bounds.right){
+      playState.player.sprite.body.velocity.x = playState.player.speed;
     } else {
-      this.player.sprite.body.velocity.x = 0;
+      playState.player.sprite.body.velocity.x = 0;
     }
     if(shift.isDown){
-      this.player.speed = 800;
+      playState.player.speed = 800;
     } else {
-      this.player.speed = 400;
+      playState.player.speed = 400;
     }
   },
 
   updateHUD: function(){
-    livesText.text = 'Lives: ' + this.player.lives;
+    livesText.text = 'Lives: ' + playState.player.lives;
     scoreText.text = 'Score: ' + score;
 
     if(blocks.children.length == 0){
       gameStateText.text = 'You Win! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
       gameStateText.x = game.world.centerX;
-      this.ball.sprite.kill();
+      playState.ball.sprite.kill();
 
-      enter.onDown.addOnce(this.restartLevel);
+      enter.onDown.addOnce(playState.restartLevel);
     }
 
-    if(this.player.lives == 0){
+    if(playState.player.lives == 0){
       gameStateText.text = 'Game Over! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
       gameStateText.x = game.world.centerX;
       gameStateText.anchor.set(0.5);
-      this.ball.sprite.kill();
+      playState.ball.sprite.kill();
 
-      enter.onDown.addOnce(this.restartLevel);
+      enter.onDown.addOnce(playState.restartLevel);
     }
   },
 
   checkCollisions: function(){
-    game.physics.arcade.collide(this.ball.sprite, walls, this.ballWallCollision, null, this);
-    game.physics.arcade.collide(this.ball.sprite, roof, this.ballWallCollision, null, this);
-    game.physics.arcade.collide(this.ball.sprite, blocks, this.blockCollision, null, this);
-    game.physics.arcade.collide(this.ball.sprite, this.player.sprite, this.playerBallCollision, null, this);
+    game.physics.arcade.collide(playState.ball.sprite, walls, playState.ballWallCollision, null, playState);
+    game.physics.arcade.collide(playState.ball.sprite, roof, playState.ballWallCollision, null, playState);
+    game.physics.arcade.collide(playState.ball.sprite, blocks, playState.blockCollision, null, playState);
+    game.physics.arcade.collide(playState.ball.sprite, playState.player.sprite, playState.playerBallCollision, null, playState);
   },
 
   outOfBounds: function(){
-    if(this.player.lives && this.ball.sprite.y > game.world.height || this.ball.sprite.x < 0 || this.ball.sprite.x > game.world.width){
-      this.player.lives -= 1;
-      if(this.player.lives){
-        this.resetBall();
+    if(playState.player.lives && playState.ball.sprite.y > game.world.height || playState.ball.sprite.x < 0 || playState.ball.sprite.x > game.world.width){
+      playState.player.lives -= 1;
+      if(playState.player.lives){
+        playState.resetBall();
       }
     }
   },
@@ -217,26 +217,26 @@ var playState = {
   },
 
   playerBallCollision: function(){
-    var collisionLoc = (this.ball.sprite.x + (this.ball.sprite.width / 2) - this.player.sprite.x) / this.player.sprite.width;
-    var newVel = Math.sqrt(Math.pow(this.ball.sprite.body.velocity.x, 2) + Math.pow(this.ball.sprite.body.velocity.y, 2));
-    game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, this.ball.sprite.body.velocity);
+    var collisionLoc = (playState.ball.sprite.x + (playState.ball.sprite.width / 2) - playState.player.sprite.x) / playState.player.sprite.width;
+    var newVel = Math.sqrt(Math.pow(playState.ball.sprite.body.velocity.x, 2) + Math.pow(playState.ball.sprite.body.velocity.y, 2));
+    game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, playState.ball.sprite.body.velocity);
     blip.play();
     combo = 1;
     comboText.text = 'Combo: x' + combo;
   },
 
   resetBall: function(){
-    this.ball.sprite.x = game.world.centerX;
-    this.ball.sprite.y = game.world.centerY + 70;
-    game.physics.arcade.velocityFromAngle(this.ball.velAngle, 0, this.ball.sprite.body.velocity);
-    this.ball.sprite.body.gravity.y = 0;
+    playState.ball.sprite.x = game.world.centerX;
+    playState.ball.sprite.y = game.world.centerY + 70;
+    game.physics.arcade.velocityFromAngle(playState.ball.velAngle, 0, playState.ball.sprite.body.velocity);
+    playState.ball.sprite.body.gravity.y = 0;
 
     var complete = function(){
       gameStateText.text = '';
       game.physics.arcade.velocityFromAngle(startAngle(), 300, playState.ball.sprite.body.velocity);
       playState.ball.sprite.body.gravity.y = playState.ball.gravity;
     };
-    this.countdown(tick, complete, 3);
+    playState.countdown(tick, complete, 3);
   },
 
   restartLevel: function(){
@@ -266,7 +266,8 @@ var playState = {
     } else {
       complete();
     }
-  }
+  },
+  blocks: "AASS",
 }
 // end game state
 

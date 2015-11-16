@@ -3,6 +3,8 @@ Arkanoid / Breakout Ripoff.
 
 http://ballout.puffy.dog
 
+![Screenshot](https://raw.githubusercontent.com/BrendanTimmons/Ballout/gh-pages/assets/splash-bg.jpg)
+
 ## Gameplay
 
 The objective of the game is to destroy the blocks. 
