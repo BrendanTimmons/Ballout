@@ -66,6 +66,8 @@ var playState = {
 
     game.add.sprite(0,0, levelData.levelBackground);
     playState.walls = game.add.physicsGroup();
+    
+
 
     var wall = playState.walls.create(0, 0, 'ground');
     wall.scale.setTo(0.05, 60);
@@ -92,7 +94,6 @@ var playState = {
       var block = playState.blocks.create(ele.x, ele.y, 'block');
       block.body.immovable = true;
     });
-
 
     playState.ball.sprite = playState.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
     playState.player.sprite = playState.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
@@ -213,7 +214,7 @@ var playState = {
 
     playState.combo = playState.combo + 1;
 
-    flashBg();
+    Helpers.flashBg();
   },
 
   ballWallCollision: function(){
@@ -295,17 +296,6 @@ function startAngle(){
 }
 
 
-function flashBg(){
-  $("body").css({
-    'backgroundColor':"#4e404f"
-  });
-
-  setTimeout(function(){
-    $("body").css({
-      'backgroundColor':"#3f3440"
-    });
-  }, 250);
-}
 
 
 

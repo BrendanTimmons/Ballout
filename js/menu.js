@@ -42,7 +42,7 @@ var menuState = {
   },
 
   start: function(){
-    flashBg(); //this is in play.js maybe i need to clean up my functions
+    Helpers.flashBg(); 
     explosion.play();
     setTimeout(function(){
       tastemyball.play();
@@ -55,7 +55,7 @@ var menuState = {
 }
 
 function levelSelect(){
-  flashBg();
+  Helpers.flashBg();
   explosion.play();
   menuStage = 2;
   startText.visible = false;
