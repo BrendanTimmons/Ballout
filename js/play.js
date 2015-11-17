@@ -160,6 +160,7 @@ var playState = {
       playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
       playState.mainText.x = game.world.centerX;
       playState.ball.sprite.kill();
+      playState.postScore();
 
       enter.onDown.addOnce(playState.restartLevel);
     }
@@ -169,6 +170,7 @@ var playState = {
       playState.mainText.x = game.world.centerX;
       playState.mainText.anchor.set(0.5);
       playState.ball.sprite.kill();
+      playState.postScore();
 
       enter.onDown.addOnce(playState.restartLevel);
     }
@@ -285,6 +287,16 @@ var playState = {
     } else {
       game.physics.arcade.isPaused = true;
     }
+  },
+  
+  postScore: function(){
+    //$.post("http://10.1.1.122:4000/api/scores", {score: {name: playState.player.name, value: playState.score}}	);
+  }
+
+  getHighScores: function(){
+    $.get("http://10.1.1.122:4000/api/scores", function(data){
+      console.log(data);
+    });
   }
 }
 // end game state
@@ -294,11 +306,3 @@ var playState = {
 function startAngle(){
   return 67.5 + (Math.random() * 45);
 }
-
-
-
-
-
-
-
-
