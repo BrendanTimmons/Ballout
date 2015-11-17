@@ -291,13 +291,13 @@ var playState = {
   
   postScore: function(){
     //$.post("http://10.1.1.122:4000/api/scores", {score: {name: playState.player.name, value: playState.score}}	);
-  }
+  },
 
-  getHighScores: function(){
-    $.get("http://10.1.1.122:4000/api/scores", function(data){
-      console.log(data);
-    });
-  }
+//  getHighScores: function(){
+//    $.get("http://10.1.1.122:4000/api/scores", function(data){
+//      console.log(data);
+//    });
+//  }
 }
 // end game state
 
