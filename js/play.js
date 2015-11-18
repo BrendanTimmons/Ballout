@@ -12,6 +12,7 @@ var playState = {
     gravity: 400
   },
 
+  scorePosted: false,
   blocks: null,
   walls: null,
   roof: null,
@@ -160,7 +161,11 @@ var playState = {
       playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
       playState.mainText.x = game.world.centerX;
       playState.ball.sprite.kill();
-      // playState.postScore();
+      // Post the score if we need to
+      if (!playState.scorePosted) {
+        playState.postScore();
+      }
+
 
       enter.onDown.addOnce(playState.restartLevel);
     }
@@ -170,7 +175,10 @@ var playState = {
       playState.mainText.x = game.world.centerX;
       playState.mainText.anchor.set(0.5);
       playState.ball.sprite.kill();
-      // playState.postScore();
+      // Post the score if we need to
+      if (!playState.scorePosted) {
+        playState.postScore();
+      }
 
       enter.onDown.addOnce(playState.restartLevel);
     }
@@ -250,18 +258,21 @@ var playState = {
     playState.countdown(complete, 3);
   },
 
-  restartLevel: function(){
+  reset: function(){
+    playState.scorePosted = false;
     playState.player.lives = 3;
     playState.score = 0;
     playState.combo = 1;
+  },
+
+  restartLevel: function(){
+    playState.reset();
 
     game.state.restart();
   },
 
   returnToMenu: function(){
-    playState.player.lives = 3;
-    playState.score = 0;
-    playState.combo = 1;
+    playState.reset();
     music.stop();
 
     game.state.start('menu');
@@ -290,15 +301,12 @@ var playState = {
   },
 
   postScore: function(){
+    playState.scorePosted = true;
     player_name = $("#name").val();
-    $.post("http://vcs.hhd.com.au:4000/api/scores", {score: {name: player_name, value: playState.score}});
+    $.post("http://vcs.hhd.com.au:4000/api/scores", {score: {name: player_name, value: playState.score}}, function(){
+      updateHighScores();
+    });
   }
-
-  // getHighScores: function(){
-  //   $.get("http://vcs.hhd.com.au:4000/api/scores", function(data){
-  //     console.log(data);
-  //   });
-  // }
 }
 // end game state
 
