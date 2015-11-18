@@ -11,7 +11,7 @@ var playState = {
     bounce: 1.02,
     gravity: 400
   },
-    
+
   blocks: null,
   walls: null,
   roof: null,
@@ -66,7 +66,7 @@ var playState = {
 
     game.add.sprite(0,0, levelData.levelBackground);
     playState.walls = game.add.physicsGroup();
-    
+
 
 
     var wall = playState.walls.create(0, 0, 'ground');
@@ -288,16 +288,17 @@ var playState = {
       game.physics.arcade.isPaused = true;
     }
   },
-  
-  postScore: function(){
-    //$.post("http://10.1.1.122:4000/api/scores", {score: {name: playState.player.name, value: playState.score}}	);
-  },
 
-//  getHighScores: function(){
-//    $.get("http://10.1.1.122:4000/api/scores", function(data){
-//      console.log(data);
-//    });
-//  }
+  postScore: function(){
+    player_name = $("#name").val();
+    $.post("http://vcs.hhd.com.au:4000/api/scores", {score: {name: player_name, value: playState.score}});
+  }
+
+  // getHighScores: function(){
+  //   $.get("http://vcs.hhd.com.au:4000/api/scores", function(data){
+  //     console.log(data);
+  //   });
+  // }
 }
 // end game state
 
