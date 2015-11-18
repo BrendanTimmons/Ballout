@@ -160,7 +160,7 @@ var playState = {
       playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
       playState.mainText.x = game.world.centerX;
       playState.ball.sprite.kill();
-      playState.postScore();
+      // playState.postScore();
 
       enter.onDown.addOnce(playState.restartLevel);
     }
@@ -170,7 +170,7 @@ var playState = {
       playState.mainText.x = game.world.centerX;
       playState.mainText.anchor.set(0.5);
       playState.ball.sprite.kill();
-      playState.postScore();
+      // playState.postScore();
 
       enter.onDown.addOnce(playState.restartLevel);
     }

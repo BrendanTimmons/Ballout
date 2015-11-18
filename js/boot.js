@@ -11,12 +11,9 @@ var bootState = {
 
 var updateHighScores = function(){
   $.get("http://vcs.hhd.com.au:4000/api/scores", function(data){
-    console.log(data.data);
-    // $("#scores").empty();
-    $("#scores").append("<h2>High Scores</h2>");
+    $("#game-scores").empty();
     for (var i = 0; i < data.data.length; i++) {
-      // console.log(data.data[i]);
-      $("#scores").append("<p>" + data.data[i].rank + ' - ' + data.data[i].name + ' - ' + data.data[i].value + "</p>" );
+      $("#game-scores").append("<li>" + data.data[i].name + ' - ' + data.data[i].value + "</li>" );
     }
   });
 };
