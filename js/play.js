@@ -1,19 +1,28 @@
 var playState = {
-  init: function(){
-    playState.player = {
-      lives: 3,
-      speed: 400,
-      name: "NUL"
-    }
-
-    playState.ball = {
-      vel: 300,
-      velAngle: 125,
-      bounce: 1.02,
-      gravity: 400
-    }
+  player: {
+    lives: 3,
+    speed: 400,
+    name: "NUL"
   },
 
+  ball: {
+    vel: 300,
+    velAngle: 125,
+    bounce: 1.02,
+    gravity: 400
+  },
+
+  scorePosted: false,
+  blocks: null,
+  walls: null,
+  roof: null,
+  livesText: null,
+  mainText: null,
+  pauseText: null,
+  score: 0,
+  scoreText: null,
+  combo: 1,
+  comboText: null,
 
 
 
@@ -28,71 +37,72 @@ var playState = {
     playState.startGame();
     audioVol();
 
-    space.onDown.add(togglePause);
+    space.onDown.add(playState.togglePause);
     esc.onDown.addOnce(playState.returnToMenu);
   },
 
 
   createHUD: function(){
-    livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + playState.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
-    livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    playState.livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + playState.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
+    playState.livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-    pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
-    pauseText.anchor.set(0.5);
-    pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-    pauseText.visible = false;
+    playState.pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
+    playState.pauseText.anchor.set(0.5);
+    playState.pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    playState.pauseText.visible = false;
 
-    gameStateText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
-    gameStateText.anchor.set(0.5);
-    gameStateText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    playState.mainText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
+    playState.mainText.anchor.set(0.5);
+    playState.mainText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-    scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + score, {fontSize: '20px', fill: '#ff5dbd'});
-    scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    playState.scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + playState.score, {fontSize: '20px', fill: '#ff5dbd'});
+    playState.scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-    comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + combo, {fontSize: '20px', fill: '#ff5dbd'});
-    comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    playState.comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + playState.combo, {fontSize: '20px', fill: '#ff5dbd'});
+    playState.comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
   },
 
   createLevel: function(){
     var levelData = game.cache.getJSON('level' + selectedLevel);
 
     game.add.sprite(0,0, levelData.levelBackground);
-    walls = game.add.physicsGroup();
+    playState.walls = game.add.physicsGroup();
 
-    var wall = walls.create(0, 0, 'ground');
+
+
+    var wall = playState.walls.create(0, 0, 'ground');
     wall.scale.setTo(0.05, 60);
     wall.body.immovable = true;
 
-    wall = walls.create(game.width -20, 0, 'ground');
+    wall = playState.walls.create(game.width -20, 0, 'ground');
     wall.scale.setTo(0.05, 60);
     wall.body.immovable = true;
 
-    roof = game.add.sprite(0, -10, 'ground');
-    roof.scale.setTo(60, 1);
-    game.physics.enable(roof, Phaser.Physics.ARCADE);
-    roof.body.immovable = true;
+    playState.roof = game.add.sprite(0, -10, 'ground');
+    playState.roof.scale.setTo(60, 1);
+    game.physics.enable(playState.roof, Phaser.Physics.ARCADE);
+    playState.roof.body.immovable = true;
 
-    blocks = game.add.physicsGroup();
+    playState.blocks = game.add.physicsGroup();
 
     levelData.platformData.forEach(function(ele){
-      wall = walls.create(ele.x, ele.y, ele.sprite);
+      wall = playState.walls.create(ele.x, ele.y, ele.sprite);
       wall.anchor.set(0.5);
       wall.body.immovable = true;
     });
 
     levelData.blockData.forEach(function(ele){
-      var block = blocks.create(ele.x, ele.y, 'block');
+      var block = playState.blocks.create(ele.x, ele.y, 'block');
       block.body.immovable = true;
     });
-
 
     playState.ball.sprite = playState.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
     playState.player.sprite = playState.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
   },
 
   initPhysics: function(){
-    walls.enableBody = true;
-    blocks.enableBody = true;
+    playState.walls.enableBody = true;
+    playState.blocks.enableBody = true;
 
     playState.game.physics.enable(playState.ball.sprite, Phaser.Physics.ARCADE);
     playState.ball.sprite.body.bounce.set(playState.ball.bounce);
@@ -107,11 +117,11 @@ var playState = {
 
     var complete = function(){
       play.play();
-      gameStateText.text = '';
+      playState.mainText.text = '';
       playState.game.physics.arcade.velocityFromAngle(startAngle(), playState.ball.vel, playState.ball.sprite.body.velocity);
       playState.ball.sprite.body.gravity.y = playState.ball.gravity;
     };
-    playState.countdown(tick, complete, 3);
+    playState.countdown(complete, 3);
   },
 
 
@@ -144,31 +154,40 @@ var playState = {
   },
 
   updateHUD: function(){
-    livesText.text = 'Lives: ' + playState.player.lives;
-    scoreText.text = 'Score: ' + score;
+    playState.livesText.text = 'Lives: ' + playState.player.lives;
+    playState.scoreText.text = 'Score: ' + playState.score;
 
-    if(blocks.children.length == 0){
-      gameStateText.text = 'You Win! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
-      gameStateText.x = game.world.centerX;
+    if(playState.blocks.children.length == 0){
+      playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
+      playState.mainText.x = game.world.centerX;
       playState.ball.sprite.kill();
+      // Post the score if we need to
+      if (!playState.scorePosted) {
+        playState.postScore();
+      }
+
 
       enter.onDown.addOnce(playState.restartLevel);
     }
 
     if(playState.player.lives == 0){
-      gameStateText.text = 'Game Over! \n High Score: ' + score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
-      gameStateText.x = game.world.centerX;
-      gameStateText.anchor.set(0.5);
+      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
+      playState.mainText.x = game.world.centerX;
+      playState.mainText.anchor.set(0.5);
       playState.ball.sprite.kill();
+      // Post the score if we need to
+      if (!playState.scorePosted) {
+        playState.postScore();
+      }
 
       enter.onDown.addOnce(playState.restartLevel);
     }
   },
 
   checkCollisions: function(){
-    game.physics.arcade.collide(playState.ball.sprite, walls, playState.ballWallCollision, null, playState);
-    game.physics.arcade.collide(playState.ball.sprite, roof, playState.ballWallCollision, null, playState);
-    game.physics.arcade.collide(playState.ball.sprite, blocks, playState.blockCollision, null, playState);
+    game.physics.arcade.collide(playState.ball.sprite, playState.walls, playState.ballWallCollision, null, playState);
+    game.physics.arcade.collide(playState.ball.sprite, playState.roof, playState.ballWallCollision, null, playState);
+    game.physics.arcade.collide(playState.ball.sprite, playState.blocks, playState.blockCollision, null, playState);
     game.physics.arcade.collide(playState.ball.sprite, playState.player.sprite, playState.playerBallCollision, null, playState);
   },
 
@@ -184,28 +203,28 @@ var playState = {
   blockCollision: function(ballObj, blockObj){
     blockObj.destroy();
     explosion.play();
-    score = score + (20 * combo);
-    comboText.text = 'Combo: x' + combo;
+    playState.score = playState.score + (20 * playState.combo);
+    playState.comboText.text = 'Combo: x' + playState.combo;
 
-    if(combo == 3){
+    if(playState.combo == 3){
       triplekill.play();
-    } else if (combo == 7){
+    } else if (playState.combo == 7){
       impressive.play();
-    } else if (combo == 12){
+    } else if (playState.combo == 12){
       holyshit.play();
-    } else if (combo == 18){
+    } else if (playState.combo == 18){
       rampage.play();
-    } else if (combo == 22){
+    } else if (playState.combo == 22){
       wickedsick.play();
-    } else if (combo == 28){
+    } else if (playState.combo == 28){
       unstoppable.play();
-    } else if (combo == 30){
-      combowhore.play();
+    } else if (playState.combo == 30){
+      playState.combowhore.play();
     }
 
-    combo = combo + 1;
+    playState.combo = playState.combo + 1;
 
-    flashBg();
+    Helpers.flashBg();
   },
 
   ballWallCollision: function(){
@@ -221,8 +240,8 @@ var playState = {
     var newVel = Math.sqrt(Math.pow(playState.ball.sprite.body.velocity.x, 2) + Math.pow(playState.ball.sprite.body.velocity.y, 2));
     game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, playState.ball.sprite.body.velocity);
     blip.play();
-    combo = 1;
-    comboText.text = 'Combo: x' + combo;
+    playState.combo = 1;
+    playState.comboText.text = 'Combo: x' + playState.combo;
   },
 
   resetBall: function(){
@@ -232,93 +251,67 @@ var playState = {
     playState.ball.sprite.body.gravity.y = 0;
 
     var complete = function(){
-      gameStateText.text = '';
+      playState.mainText.text = '';
       game.physics.arcade.velocityFromAngle(startAngle(), 300, playState.ball.sprite.body.velocity);
       playState.ball.sprite.body.gravity.y = playState.ball.gravity;
     };
-    playState.countdown(tick, complete, 3);
+    playState.countdown(complete, 3);
+  },
+
+  reset: function(){
+    playState.scorePosted = false;
+    playState.player.lives = 3;
+    playState.score = 0;
+    playState.combo = 1;
   },
 
   restartLevel: function(){
-    playState.player.lives = 3;
-    score = 0;
-    combo = 1;
+    playState.reset();
 
     game.state.restart();
   },
 
   returnToMenu: function(){
-    playState.player.lives = 3;
-    score = 0;
-    combo = 1;
+    playState.reset();
     music.stop();
 
     game.state.start('menu');
   },
 
-  countdown: function(tick, complete, counter){
+  countdown: function(complete, counter){
     if (counter > 0){
-      tick(counter);
+      playState.mainText.text = counter;
       counter --;
       setTimeout(function(){
-        playState.countdown(tick, complete, counter);
+        playState.countdown(complete, counter);
       }, 1000);
     } else {
       complete();
     }
   },
-  blocks: "AASS",
+
+  togglePause: function(){
+    playState.pauseText.visible = !playState.pauseText.visible;
+
+    if(game.physics.arcade.isPaused){
+      game.physics.arcade.isPaused = false;
+    } else {
+      game.physics.arcade.isPaused = true;
+    }
+  },
+
+  postScore: function(){
+    playState.scorePosted = true;
+    player_name = $("#name").val();
+    $.post("http://vcs.hhd.com.au:4000/api/scores", {score: {name: player_name, value: playState.score}}, function(){
+      Helpers.updateHighScores();
+    });
+  }
 }
 // end game state
 
 
-var blocks,
-    walls,
-    roof,
-    livesText,
-    gameStateText,
-    pauseText,
-    score = 0,
-    scoreText,
-    combo = 1,
-    comboText,
-    gameStarted = false;
 
 function startAngle(){
   return 67.5 + (Math.random() * 45);
 }
-
-
-function flashBg(){
-  $("body").css({
-    'backgroundColor':"#4e404f"
-  });
-
-  setTimeout(function(){
-    $("body").css({
-      'backgroundColor':"#3f3440"
-    });
-  }, 250);
-}
-
-
-function togglePause(){
-  pauseText.visible = !pauseText.visible;
-
-  if(game.physics.arcade.isPaused){
-    game.physics.arcade.isPaused = false;
-  } else {
-    game.physics.arcade.isPaused = true;
-  }
-}
-
-function outOfBounds(){
-}
-
-var tick = function(counter){
-  gameStateText.text = counter;
-}
-
-
-
-
