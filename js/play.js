@@ -310,7 +310,15 @@ var playState = {
 }
 // end game state
 
-
+document.addEventListener("DOMContentLoaded", function(event) { 
+  var name = document.getElementById("name");
+  if(localStorage.playerName){
+    name.value = localStorage.playerName;
+  }
+  name.addEventListener("blur", function(){
+    localStorage.playerName = this.value;
+  });
+});
 
 function startAngle(){
   return 67.5 + (Math.random() * 45);
