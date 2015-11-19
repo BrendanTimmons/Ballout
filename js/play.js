@@ -219,7 +219,7 @@ var playState = {
     } else if (playState.combo == 28){
       unstoppable.play();
     } else if (playState.combo == 30){
-      playState.combowhore.play();
+      combowhore.play();
     }
 
     playState.combo = playState.combo + 1;
