@@ -109,6 +109,9 @@ var playState = {
 
     playState.game.physics.enable(playState.player.sprite, Phaser.Physics.ARCADE);
     playState.player.sprite.body.immovable = true;
+    playState.player.sprite.body.checkCollision.left = false;
+    playState.player.sprite.body.checkCollision.right = false;
+    playState.player.sprite.body.checkCollision.down = false;
   },
 
   startGame: function(){
