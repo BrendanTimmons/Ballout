@@ -306,7 +306,7 @@ var playState = {
   postScore: function(){
     playState.scorePosted = true;
     player_name = $("#name").val();
-    $.post("http://vcs.hhd.com.au:4000/api/scores", {score: {name: player_name, value: playState.score}}, function(){
+    $.post("http://vcs.hhd.com.au:1337/api/scores", {score: {name: player_name, value: playState.score}}, function(){
       Helpers.updateHighScores();
     });
   }
