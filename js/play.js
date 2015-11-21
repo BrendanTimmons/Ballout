@@ -314,11 +314,6 @@ var playState = {
 }
 // end game state
 
-<<<<<<< Updated upstream
-
-
-=======
->>>>>>> Stashed changes
 function startAngle(){
   return 67.5 + (Math.random() * 45);
 }
