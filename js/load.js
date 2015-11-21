@@ -32,9 +32,7 @@ loadState.prototype = {
     game.load.audio('play', 'assets/audio/play.wav');
     game.load.audio('tastemyball', 'assets/audio/taste-my-ball.mp3');
 
-    game.load.json('level1', 'levels/lvl1.json');
-    game.load.json('level2', 'levels/lvl2.json');
-    game.load.json('level3', 'levels/lvl3.json');
+    game.load.json('levels', 'levels/lvl.json');
 
 
     var loadingText = game.add.text(game.world.centerX, game.world.centerY, "Loading...", {font: "16px Arial", fill: "#ffffff"});

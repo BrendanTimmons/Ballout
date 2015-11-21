@@ -20,3 +20,13 @@ var Helpers = {
     });
   }
 }
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+  var name = document.getElementById("name");
+  if(localStorage.playerName){
+    name.value = localStorage.playerName;
+  }
+  name.addEventListener("blur", function(){
+    localStorage.playerName = this.value;
+  });
+});

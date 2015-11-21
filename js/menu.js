@@ -1,7 +1,7 @@
 var startText,
     timer = 0,
     menuStage,
-    selectedLevel = 1;
+    selectedLevel;
 
 var cursors,
     shift,
@@ -15,16 +15,18 @@ var config = {
 
 var menuState = {
   create: function(){
+    selectedLevel = 0;
     bindKeys();
     menuStage = 1;
+    levelData = game.cache.getJSON('levels');
 
     game.add.sprite(0,0, 'splashbg');
     startText = game.add.text(game.world.centerX, game.world.centerY + 50, "Press Enter to start", {fontSize: '40px', fill: '#ff5dbd'});
     startText.anchor.set(0.5, 0);
     startText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-    //enter.onDown.addOnce(this.start, this);
-    enter.onDown.addOnce(levelSelect);
+    //enter.onDown.addOnce(levelSelect);
+    enter.onDown.addOnce(menuState.start, true);
 
     menuMusic = game.add.audio('soundtrackMenu');
     menuMusic.loop = true;
@@ -64,24 +66,23 @@ function levelSelect(){
   selectLevelText.anchor.set(0.5, 0);
   selectLevelText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
-  levelText = game.add.text(game.world.centerX + (selectLevelText.width / 2.5), game.world.centerY + 40, selectedLevel, {fontSize: '50px', fill: '#ff5dbd'});
+  levelText = game.add.text(game.world.centerX + (selectLevelText.width / 2.5), game.world.centerY + 40, selectedLevel + 1, {fontSize: '50px', fill: '#ff5dbd'});
   levelText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
 
 
-  // IMPROVE THIS LATER
   cursors.right.onDown.add(function(){
-    if(selectedLevel < 3){
+    if(selectedLevel < levelData.levels.length - 1){
       selectedLevel = selectedLevel + 1;
-      levelText.text = selectedLevel;
+      levelText.text = selectedLevel + 1;
       blip.play();
     } else {
       blip2.play();
     }
   });
   cursors.left.onDown.add(function(){
-    if(selectedLevel > 1){
+    if(selectedLevel > 0){
       selectedLevel = selectedLevel - 1;
-      levelText.text = selectedLevel;
+      levelText.text = selectedLevel + 1;
       blip.play();
     } else {
       blip2.play();
