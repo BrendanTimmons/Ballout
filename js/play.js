@@ -19,6 +19,7 @@ var playState = {
   livesText: null,
   mainText: null,
   pauseText: null,
+  baseScore: 20,
   score: 0,
   scoreText: null,
   combo: 1,
@@ -36,7 +37,8 @@ var playState = {
     playState.initPhysics();
     playState.startGame();
     audioVol();
-
+    
+      console.log(selectedLevel, levelData.levels.length - 1);
     space.onDown.add(playState.togglePause);
     esc.onDown.addOnce(playState.returnToMenu);
   },
@@ -63,9 +65,9 @@ var playState = {
   },
 
   createLevel: function(){
-    var levelData = game.cache.getJSON('level' + selectedLevel);
+    var level = levelData.levels[selectedLevel];
 
-    game.add.sprite(0,0, levelData.levelBackground);
+    game.add.sprite(0,0, level.levelBackground);
     playState.walls = game.add.physicsGroup();
 
 
@@ -85,13 +87,13 @@ var playState = {
 
     playState.blocks = game.add.physicsGroup();
 
-    levelData.platformData.forEach(function(ele){
+    level.platformData.forEach(function(ele){
       wall = playState.walls.create(ele.x, ele.y, ele.sprite);
       wall.anchor.set(0.5);
       wall.body.immovable = true;
     });
 
-    levelData.blockData.forEach(function(ele){
+    level.blockData.forEach(function(ele){
       var block = playState.blocks.create(ele.x, ele.y, 'block');
       block.body.immovable = true;
     });
@@ -161,20 +163,26 @@ var playState = {
     playState.scoreText.text = 'Score: ' + playState.score;
 
     if(playState.blocks.children.length == 0){
-      playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
-      playState.mainText.x = game.world.centerX;
       playState.ball.sprite.kill();
-      // Post the score if we need to
-      if (!playState.scorePosted) {
-        playState.postScore();
+
+      if(selectedLevel == levelData.levels.length - 1){
+        // Post the score if we need to
+        if (!playState.scorePosted) {
+          playState.postScore();
+          console.log("Win Score Posted");
+
+          playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Esc to Return to Menu';
+          playState.mainText.x = game.world.centerX;
+          playState.mainText.anchor.set(0.5);
+        }
+      } else {
+        selectedLevel = selectedLevel + 1;
+        playState.restartLevel();
       }
-
-
-      enter.onDown.addOnce(playState.restartLevel);
     }
 
     if(playState.player.lives == 0){
-      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n Press Enter to Restart Level \n Press Esc to Return to Menu';
+      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n Press Esc to Return to Menu';
       playState.mainText.x = game.world.centerX;
       playState.mainText.anchor.set(0.5);
       playState.ball.sprite.kill();
@@ -182,8 +190,6 @@ var playState = {
       if (!playState.scorePosted) {
         playState.postScore();
       }
-
-      enter.onDown.addOnce(playState.restartLevel);
     }
   },
 
@@ -206,7 +212,7 @@ var playState = {
   blockCollision: function(ballObj, blockObj){
     blockObj.destroy();
     explosion.play();
-    playState.score = playState.score + (20 * playState.combo);
+    playState.score = playState.score + (playState.baseScore * playState.combo);
     playState.comboText.text = 'Combo: x' + playState.combo;
 
     if(playState.combo == 3){
@@ -263,8 +269,6 @@ var playState = {
 
   reset: function(){
     playState.scorePosted = false;
-    playState.player.lives = 3;
-    playState.score = 0;
     playState.combo = 1;
   },
 
