@@ -1,20 +1,20 @@
 { "levels": [{
     "blockData": [
-      {"x": 250, "y": 350, "type": "normal"},
-      {"x": 300, "y": 350, "type": "normal"},
-      {"x": 350, "y": 350, "type": "normal"},
-      {"x": 400, "y": 350, "type": "normal"},
-      {"x": 450, "y": 350, "type": "normal"},
-      {"x": 500, "y": 350, "type": "normal"},
-      {"x": 550, "y": 350, "type": "normal"},
+      {"x": 250, "y": 250, "type": "normal"},
+      {"x": 300, "y": 250, "type": "normal"},
+      {"x": 350, "y": 250, "type": "normal"},
+      {"x": 400, "y": 250, "type": "normal"},
+      {"x": 450, "y": 250, "type": "normal"},
+      {"x": 500, "y": 250, "type": "normal"},
+      {"x": 550, "y": 250, "type": "normal"},
 
-      {"x": 250, "y": 310, "type": "normal"},
-      {"x": 300, "y": 310, "type": "normal"},
-      {"x": 350, "y": 310, "type": "normal"},
-      {"x": 400, "y": 310, "type": "normal"},
-      {"x": 450, "y": 310, "type": "normal"},
-      {"x": 500, "y": 310, "type": "normal"},
-      {"x": 550, "y": 310, "type": "normal"}
+      {"x": 250, "y": 210, "type": "normal"},
+      {"x": 300, "y": 210, "type": "normal"},
+      {"x": 350, "y": 210, "type": "normal"},
+      {"x": 400, "y": 210, "type": "normal"},
+      {"x": 450, "y": 210, "type": "normal"},
+      {"x": 500, "y": 210, "type": "normal"},
+      {"x": 550, "y": 210, "type": "normal"}
     ],
     "platformData": [
     ],
