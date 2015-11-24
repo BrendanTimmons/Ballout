@@ -40,7 +40,7 @@ var playState = {
     
       console.log(selectedLevel, levelData.levels.length - 1);
     space.onDown.add(playState.togglePause);
-    esc.onDown.addOnce(playState.returnToMenu);
+    //esc.onDown.addOnce(playState.returnToMenu);
   },
 
 
@@ -171,7 +171,7 @@ var playState = {
           playState.postScore();
           console.log("Win Score Posted");
 
-          playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n Press Esc to Return to Menu';
+          playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n refresh your browser to restart';
           playState.mainText.x = game.world.centerX;
           playState.mainText.anchor.set(0.5);
         }
@@ -182,7 +182,7 @@ var playState = {
     }
 
     if(playState.player.lives == 0){
-      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n Press Esc to Return to Menu';
+      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n refresh your browser to restart';
       playState.mainText.x = game.world.centerX;
       playState.mainText.anchor.set(0.5);
       playState.ball.sprite.kill();
