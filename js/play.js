@@ -177,6 +177,7 @@ var playState = {
         }
       } else {
         selectedLevel = selectedLevel + 1;
+        playState.player.lives = playState.player.lives + 1;
         playState.restartLevel();
       }
     }
