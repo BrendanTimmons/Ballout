@@ -117,8 +117,8 @@ var playState = {
   },
 
   introCinematic: function(){
-    var animShip = game.add.tween(playState.player.sprite).to( { y: game.world.height - 70 }, 2000, "Quart.easeOut", true, 1000);
-    animShip.onComplete.add(function(){
+    var animShipIn = game.add.tween(playState.player.sprite).to( { y: game.world.height - 70 }, 2000, "Quart.easeOut", true, 1000);
+    animShipIn.onComplete.add(function(){
       playState.startGame();
     },this);
   },
@@ -143,7 +143,6 @@ var playState = {
 
   update: function(){
     playState.movePlayer();
-    playState.updateHUD();
     playState.checkCollisions();
     playState.outOfBounds();
   },
@@ -183,9 +182,13 @@ var playState = {
           playState.mainText.anchor.set(0.5);
         }
       } else {
-        selectedLevel = selectedLevel + 1;
-        playState.player.lives = playState.player.lives + 1;
-        playState.restartLevel();
+        var animShipOut = game.add.tween(playState.player.sprite).to( { y: -100 }, 3000, "Quart.easeInOut", true, 1000);
+        animShipOut.onComplete.add(function(){
+          selectedLevel = selectedLevel + 1;
+          playState.player.lives = playState.player.lives + 1;
+          playState.restartLevel();
+        },this);
+
       }
     }
 
@@ -242,10 +245,12 @@ var playState = {
     playState.combo = playState.combo + 1;
 
     Helpers.flashBg();
+    playState.updateHUD();
   },
 
   ballWallCollision: function(){
     blip2.play();
+    playState.updateHUD();
   },
 
   ballCollision: function(){
@@ -259,6 +264,7 @@ var playState = {
     blip.play();
     playState.combo = 1;
     playState.comboText.text = 'Combo: x' + playState.combo;
+    playState.updateHUD();
   },
 
   resetBall: function(){
@@ -273,6 +279,7 @@ var playState = {
       playState.ball.sprite.body.gravity.y = playState.ball.gravity;
     };
     playState.countdown(complete, 3);
+    playState.updateHUD();
   },
 
   reset: function(){
