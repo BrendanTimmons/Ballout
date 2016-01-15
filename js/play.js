@@ -35,7 +35,7 @@ var playState = {
     playState.createLevel();
     playState.createHUD();
     playState.initPhysics();
-    playState.startGame();
+    playState.introCinematic();
     audioVol();
     
       console.log(selectedLevel, levelData.levels.length - 1);
@@ -99,7 +99,7 @@ var playState = {
     });
 
     playState.ball.sprite = playState.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
-    playState.player.sprite = playState.add.sprite(game.world.centerX - (64 / 2), game.world.height - 70, 'paddle');
+    playState.player.sprite = playState.add.sprite(game.world.centerX - (64 / 2), game.world.height + 70, 'paddle');
   },
 
   initPhysics: function(){
@@ -114,6 +114,13 @@ var playState = {
     playState.player.sprite.body.checkCollision.left = false;
     playState.player.sprite.body.checkCollision.right = false;
     playState.player.sprite.body.checkCollision.down = false;
+  },
+
+  introCinematic: function(){
+    var animShip = game.add.tween(playState.player.sprite).to( { y: game.world.height - 70 }, 2000, "Quart.easeOut", true, 1000);
+    animShip.onComplete.add(function(){
+      playState.startGame();
+    },this);
   },
 
   startGame: function(){
