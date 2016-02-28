@@ -38,7 +38,6 @@ var playState = {
     playState.introCinematic();
     audioVol();
     
-      console.log(selectedLevel, levelData.levels.length - 1);
     space.onDown.add(playState.togglePause);
     //esc.onDown.addOnce(playState.returnToMenu);
   },
@@ -164,46 +163,6 @@ var playState = {
     }
   },
 
-  updateHUD: function(){
-    playState.livesText.text = 'Lives: ' + playState.player.lives;
-    playState.scoreText.text = 'Score: ' + playState.score;
-
-    if(playState.blocks.children.length == 0){
-      playState.ball.sprite.kill();
-
-      if(selectedLevel == levelData.levels.length - 1){
-        // Post the score if we need to
-        if (!playState.scorePosted) {
-          playState.postScore();
-          console.log("Win Score Posted");
-
-          playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n refresh your browser to restart';
-          playState.mainText.x = game.world.centerX;
-          playState.mainText.anchor.set(0.5);
-        }
-      } else {
-        var animShipOut = game.add.tween(playState.player.sprite).to( { y: -100 }, 3000, "Quart.easeInOut", true, 1000);
-        animShipOut.onComplete.add(function(){
-          selectedLevel = selectedLevel + 1;
-          playState.player.lives = playState.player.lives + 1;
-          playState.restartLevel();
-        },this);
-
-      }
-    }
-
-    if(playState.player.lives == 0){
-      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n refresh your browser to restart';
-      playState.mainText.x = game.world.centerX;
-      playState.mainText.anchor.set(0.5);
-      playState.ball.sprite.kill();
-      // Post the score if we need to
-      if (!playState.scorePosted) {
-        playState.postScore();
-      }
-    }
-  },
-
   checkCollisions: function(){
     game.physics.arcade.collide(playState.ball.sprite, playState.walls, playState.ballWallCollision, null, playState);
     game.physics.arcade.collide(playState.ball.sprite, playState.roof, playState.ballWallCollision, null, playState);
@@ -214,6 +173,7 @@ var playState = {
   outOfBounds: function(){
     if(playState.player.lives && playState.ball.sprite.y > game.world.height || playState.ball.sprite.x < 0 || playState.ball.sprite.x > game.world.width){
       playState.player.lives -= 1;
+
       if(playState.player.lives){
         playState.resetBall();
       }
@@ -265,6 +225,48 @@ var playState = {
     playState.combo = 1;
     playState.comboText.text = 'Combo: x' + playState.combo;
     playState.updateHUD();
+  },
+
+  updateHUD: function(){
+    playState.livesText.text = 'Lives: ' + playState.player.lives;
+    playState.scoreText.text = 'Score: ' + playState.score;
+
+    if(playState.blocks.children.length == 0){
+      playState.ball.sprite.kill();
+
+      if(selectedLevel == levelData.levels.length - 1){
+        // Post the score if we need to
+        if (!playState.scorePosted) {
+          playState.postScore();
+          console.log("Win Score Posted");
+
+          playState.mainText.text = 'You Win! \n High Score: ' + playState.score + '\n refresh your browser to restart';
+          playState.mainText.x = game.world.centerX;
+          playState.mainText.anchor.set(0.5);
+        }
+      } else {
+        var animShipOut = game.add.tween(playState.player.sprite).to( { y: -100 }, 3000, "Quart.easeInOut", true, 1000);
+        animShipOut.onComplete.add(function(){
+          selectedLevel = selectedLevel + 1;
+          playState.player.lives = playState.player.lives + 1;
+          playState.restartLevel();
+        },this);
+
+      }
+    }
+
+    console.log(playState.player.lives);
+
+    if(!playState.player.lives){
+      playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n refresh your browser to restart';
+      playState.mainText.x = game.world.centerX;
+      playState.mainText.anchor.set(0.5);
+      playState.ball.sprite.kill();
+      // Post the score if we need to
+      if (!playState.scorePosted) {
+        playState.postScore();
+      }
+    }
   },
 
   resetBall: function(){
