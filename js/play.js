@@ -44,61 +44,76 @@ var playState = {
 
 
   createHUD: function(){
-    playState.livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + playState.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
-    playState.livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    createLivesText();
+    createPauseText();
+    createMainText();
+    createScoreText();
+    createComboText();
 
-    playState.pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
-    playState.pauseText.anchor.set(0.5);
-    playState.pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-    playState.pauseText.visible = false;
-
-    playState.mainText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
-    playState.mainText.anchor.set(0.5);
-    playState.mainText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-
-    playState.scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + playState.score, {fontSize: '20px', fill: '#ff5dbd'});
-    playState.scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-
-    playState.comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + playState.combo, {fontSize: '20px', fill: '#ff5dbd'});
-    playState.comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    function createLivesText(){
+      playState.livesText = game.add.text(game.world.width - 120, game.world.height -40, 'Lives: ' + playState.player.lives, {fontSize: '20px', fill: '#ff5dbd'});
+      playState.livesText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    }
+    function createPauseText(){
+      playState.pauseText = game.add.text(game.world.centerX, game.world.centerY + 30, "Paused.", {fontSize: '40px', fill: '#ff5dbd'});
+      playState.pauseText.anchor.set(0.5);
+      playState.pauseText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+      playState.pauseText.visible = false;
+    }
+    function createMainText(){
+      playState.mainText = game.add.text(game.world.centerX, game.world.centerY + 30, "", {fontSize: '40px', fill: '#ff5dbd'});
+      playState.mainText.anchor.set(0.5);
+      playState.mainText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    }
+    function createScoreText(){
+      playState.scoreText = game.add.text(game.world.width - 280, game.world.height -40, 'Score: ' + playState.score, {fontSize: '20px', fill: '#ff5dbd'});
+      playState.scoreText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    }
+    function createComboText(){
+      playState.comboText = game.add.text(game.world.width - 400, game.world.height -40, 'Combo: x' + playState.combo, {fontSize: '20px', fill: '#ff5dbd'});
+      playState.comboText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+    }
   },
 
   createLevel: function(){
     var level = levelData.levels[selectedLevel];
-
     game.add.sprite(0,0, level.levelBackground);
-    playState.walls = game.add.physicsGroup();
-
-
-
-    var wall = playState.walls.create(0, 0, 'ground');
-    wall.scale.setTo(0.05, 60);
-    wall.body.immovable = true;
-
-    wall = playState.walls.create(game.width -20, 0, 'ground');
-    wall.scale.setTo(0.05, 60);
-    wall.body.immovable = true;
-
-    playState.roof = game.add.sprite(0, -10, 'ground');
-    playState.roof.scale.setTo(60, 1);
-    game.physics.enable(playState.roof, Phaser.Physics.ARCADE);
-    playState.roof.body.immovable = true;
-
-    playState.blocks = game.add.physicsGroup();
-
-    level.platformData.forEach(function(ele){
-      wall = playState.walls.create(ele.x, ele.y, ele.sprite);
-      wall.anchor.set(0.5);
-      wall.body.immovable = true;
-    });
-
-    level.blockData.forEach(function(ele){
-      var block = playState.blocks.create(ele.x, ele.y, 'block');
-      block.body.immovable = true;
-    });
-
     playState.ball.sprite = playState.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
     playState.player.sprite = playState.add.sprite(game.world.centerX - (64 / 2), game.world.height + 70, 'paddle');
+
+    createBounds();
+    createPlatforms();
+    createBlocks();
+
+    function createBounds(){
+      playState.walls = game.add.physicsGroup();
+      var wall = playState.walls.create(0, 0, 'ground');
+      wall.scale.setTo(0.05, 60);
+      wall.body.immovable = true;
+      wall = playState.walls.create(game.width -20, 0, 'ground');
+      wall.scale.setTo(0.05, 60);
+      wall.body.immovable = true;
+      playState.roof = game.add.sprite(0, -10, 'ground');
+      playState.roof.scale.setTo(60, 1);
+      game.physics.enable(playState.roof, Phaser.Physics.ARCADE);
+      playState.roof.body.immovable = true;
+    }
+
+    function createPlatforms(){
+      level.platformData.forEach(function(ele){
+        wall = playState.walls.create(ele.x, ele.y, ele.sprite);
+        wall.anchor.set(0.5);
+        wall.body.immovable = true;
+      });
+    }
+
+    function createBlocks(){
+      playState.blocks = game.add.physicsGroup();
+      level.blockData.forEach(function(ele){
+        var block = playState.blocks.create(ele.x, ele.y, 'block');
+        block.body.immovable = true;
+      });
+    }
   },
 
   initPhysics: function(){
@@ -185,6 +200,9 @@ var playState = {
     explosion.play();
     playState.score = playState.score + (playState.baseScore * playState.combo);
     playState.comboText.text = 'Combo: x' + playState.combo;
+    playState.combo = playState.combo + 1;
+    Helpers.flashBg();
+    playState.updateHUD();
 
     if(playState.combo == 3){
       triplekill.play();
@@ -201,11 +219,6 @@ var playState = {
     } else if (playState.combo == 30){
       combowhore.play();
     }
-
-    playState.combo = playState.combo + 1;
-
-    Helpers.flashBg();
-    playState.updateHUD();
   },
 
   ballWallCollision: function(){
@@ -255,8 +268,6 @@ var playState = {
       }
     }
 
-    console.log(playState.player.lives);
-
     if(!playState.player.lives){
       playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n refresh your browser to restart';
       playState.mainText.x = game.world.centerX;
@@ -291,14 +302,12 @@ var playState = {
 
   restartLevel: function(){
     playState.reset();
-
     game.state.restart();
   },
 
   returnToMenu: function(){
     playState.reset();
     music.stop();
-
     game.state.start('menu');
   },
 
@@ -316,7 +325,6 @@ var playState = {
 
   togglePause: function(){
     playState.pauseText.visible = !playState.pauseText.visible;
-
     if(game.physics.arcade.isPaused){
       game.physics.arcade.isPaused = false;
     } else {
