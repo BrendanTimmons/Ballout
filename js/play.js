@@ -268,7 +268,7 @@ var playState = {
       }
     }
 
-    if(!playState.player.lives){
+    if(playState.player.lives <= 0){
       playState.mainText.text = 'Game Over! \n High Score: ' + playState.score + '\n refresh your browser to restart';
       playState.mainText.x = game.world.centerX;
       playState.mainText.anchor.set(0.5);
