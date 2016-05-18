@@ -186,11 +186,14 @@ var playState = {
   },
 
   outOfBounds: function(){
-    if(playState.player.lives && playState.ball.sprite.y > game.world.height || playState.ball.sprite.x < 0 || playState.ball.sprite.x > game.world.width){
+    if(playState.player.lives && playState.ball.sprite.y > game.world.height 
+        || playState.ball.sprite.x < 0 
+        || playState.ball.sprite.x > game.world.width){
       playState.player.lives -= 1;
-
       if(playState.player.lives){
         playState.resetBall();
+      } else {
+        playState.updateHUD();
       }
     }
   },
