@@ -110,7 +110,8 @@ var playState = {
     function createBlocks(){
       playState.blocks = game.add.physicsGroup();
       level.blockData.forEach(function(ele){
-        var block = playState.blocks.create(ele.x, ele.y, 'block');
+        var block = playState.blocks.create(ele.x, ele.y, ele.type);
+        block.type = ele.type;
         block.body.immovable = true;
       });
     }
@@ -222,15 +223,17 @@ var playState = {
     } else if (playState.combo == 30){
       combowhore.play();
     }
+    if(blockObj.type == "powerup"){
+      playState.ball.sprite.body.gravity.y = 0;
+      setTimeout(function(){
+        playState.ball.sprite.body.gravity.y = playState.ball.gravity;
+      }, 15000);
+    }
   },
 
   ballWallCollision: function(){
     blip2.play();
     playState.updateHUD();
-  },
-
-  ballCollision: function(){
-    // maybe do something here.
   },
 
   playerBallCollision: function(){

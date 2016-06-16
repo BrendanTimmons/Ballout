@@ -13,6 +13,7 @@ loadState.prototype = {
     game.load.image('star', 'assets/ball.png');
     game.load.image('paddle', 'assets/player.png');
     game.load.image('block', 'assets/block.png');
+    game.load.image('powerup', 'assets/block-powerup.png');
 
     game.load.audio('soundtrackMenu', 'assets/audio/trash80-missing-you.mp3');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
