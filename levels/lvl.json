@@ -1,16 +1,16 @@
 { "levels": [{
     "blockData": [
-      {"x": 250, "y": 290, "type": "powerup"},
+      {"x": 250, "y": 290, "type": "block"},
       {"x": 300, "y": 290, "type": "block"},
       {"x": 350, "y": 290, "type": "block"},
       {"x": 400, "y": 290, "type": "block"},
       {"x": 450, "y": 290, "type": "block"},
       {"x": 500, "y": 290, "type": "block"},
-      {"x": 550, "y": 290, "type": "powerup"},
+      {"x": 550, "y": 290, "type": "block"},
 
       {"x": 250, "y": 240, "type": "block"},
       {"x": 300, "y": 240, "type": "block"},
-      {"x": 350, "y": 240, "type": "block"},
+      {"x": 350, "y": 240, "type": "powerup"},
       {"x": 400, "y": 240, "type": "block"},
       {"x": 450, "y": 240, "type": "block"},
       {"x": 500, "y": 240, "type": "block"},
@@ -41,7 +41,7 @@
       {"x": 50, "y": 250, "type": "block"},
       {"x": 100, "y": 250, "type": "block"},
       {"x": 150, "y": 250, "type": "block"},
-      {"x": 200, "y": 250, "type": "block"},
+      {"x": 200, "y": 250, "type": "powerup"},
       {"x": 250, "y": 250, "type": "block"},
       {"x": 300, "y": 250, "type": "block"},
       {"x": 350, "y": 250, "type": "block"},
