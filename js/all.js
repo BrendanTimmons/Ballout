@@ -54,7 +54,7 @@ loadState.prototype = {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('platform', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');
-    game.load.image('paddle', 'assets/player.png');
+    game.load.spritesheet('paddle', 'assets/playeranim.png', 64, 28, 9);
     game.load.image('block', 'assets/block.png');
     game.load.image('powerup', 'assets/block-powerup.png');
 
@@ -325,6 +325,10 @@ var playState = {
     game.add.sprite(0, 0, level.levelBackground);
     playState.ball.sprite = playState.add.sprite(game.world.centerX, game.world.centerY + 70, 'star');
     playState.player.sprite = playState.add.sprite(game.world.centerX - 64 / 2, game.world.height + 70, 'paddle');
+    playState.player.sprite.animations.add("idle", [0, 1, 2]);
+    playState.player.sprite.animations.add("left", [3, 4, 5]);
+    playState.player.sprite.animations.add("right", [6, 7, 8]);
+    playState.player.sprite.animations.play("idle", 50, true);
 
     createBounds();
     createPlatforms();
@@ -377,6 +381,8 @@ var playState = {
   },
 
   introCinematic: function () {
+    music.loop = true;
+    music.play();
     var animShipIn = game.add.tween(playState.player.sprite).to({ y: game.world.height - 70 }, 2000, "Quart.easeOut", true, 1000);
     animShipIn.onComplete.add(function () {
       playState.startGame();
@@ -384,9 +390,6 @@ var playState = {
   },
 
   startGame: function () {
-    music.loop = true;
-    music.play();
-
     var complete = function () {
       play.play();
       playState.mainText.text = '';
@@ -411,10 +414,13 @@ var playState = {
 
     if (cursors.left.isDown && playState.player.sprite.x - playState.player.sprite.width / 2 > game.world.bounds.left) {
       playState.player.sprite.body.velocity.x = -playState.player.speed;
+      playState.player.sprite.animations.play("left", 50, true);
     } else if (cursors.right.isDown && playState.player.sprite.x + playState.player.sprite.width + 30 < game.world.bounds.right) {
       playState.player.sprite.body.velocity.x = playState.player.speed;
+      playState.player.sprite.animations.play("right", 50, true);
     } else {
       playState.player.sprite.body.velocity.x = 0;
+      playState.player.sprite.animations.play("idle", 50, true);
     }
     if (shift.isDown) {
       playState.player.speed = 800;

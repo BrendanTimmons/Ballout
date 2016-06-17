@@ -11,7 +11,7 @@ loadState.prototype = {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('platform', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');
-    game.load.image('paddle', 'assets/player.png');
+    game.load.spritesheet('paddle', 'assets/playeranim.png', 64, 28, 9);
     game.load.image('block', 'assets/block.png');
     game.load.image('powerup', 'assets/block-powerup.png');
 
