@@ -54,16 +54,16 @@ loadState.prototype = {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('platform', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');
-    game.load.spritesheet('paddle', 'assets/playeranim.png', 64, 28, 9);
     game.load.image('block', 'assets/block.png');
     game.load.image('powerup', 'assets/block-powerup.png');
+
+    game.load.spritesheet('paddle', 'assets/playeranim.png', 64, 28, 9);
 
     game.load.audio('soundtrackMenu', 'assets/audio/trash80-missing-you.mp3');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
     game.load.audio('blip', 'assets/audio/blip.wav');
     game.load.audio('blip2', 'assets/audio/blip2.wav');
     game.load.audio('explosion', 'assets/audio/Explosion2.wav');
-
     game.load.audio('godlike', 'assets/audio/godlike.mp3');
     game.load.audio('combowhore', 'assets/audio/combowhore.mp3');
     game.load.audio('holyshit', 'assets/audio/holyshit.mp3');
@@ -152,46 +152,37 @@ var config = {
 
 var menuState = {
   create: function () {
-    selectedLevel = 0;
+    menuStage = 0;
     bindKeys();
-    menuStage = 1;
-    levelData = game.cache.getJSON('levels');
+    paintMenu();
+    menuMusic();
+    getLevels();
 
-    game.add.sprite(0, 0, 'splashbg');
-    startText = game.add.text(game.world.centerX, game.world.centerY + 50, "Press Enter to start", { fontSize: '40px', fill: '#ff5dbd' });
-    startText.anchor.set(0.5, 0);
-    startText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-
-    //enter.onDown.addOnce(levelSelect);
-    enter.onDown.addOnce(menuState.start, true);
-
-    menuMusic = game.add.audio('soundtrackMenu');
-    menuMusic.loop = true;
-    menuMusic.volume = config.musicVol;
-    menuMusic.play();
+    enter.onDown.addOnce(startGame);
   },
 
   update: function () {
-    if (menuStage == 1) {
+    if (menuStage == 0) {
       blinkText(startText, 600);
-    }
-    if (menuStage == 2) {
-      blinkText(levelText, 600);
-    }
-  },
-
-  start: function () {
-    Helpers.flashBg();
-    explosion.play();
-    setTimeout(function () {
-      tastemyball.play();
-    }, 300);
-    setTimeout(function () {
-      game.state.start('play');
-      menuMusic.stop();
-    }, 2400);
+    } else if (menuStage == 1) {
+      //dunno yet
+    } else if (menuStage == 2) {
+        blinkText(levelText, 600);
+      }
   }
 };
+
+function startGame() {
+  Helpers.flashBg();
+  explosion.play();
+  setTimeout(function () {
+    tastemyball.play();
+  }, 300);
+  setTimeout(function () {
+    game.state.start('play');
+    menuMusic.stop();
+  }, 2400);
+}
 
 function levelSelect() {
   Helpers.flashBg();
@@ -225,10 +216,29 @@ function levelSelect() {
     }
   });
 
-  enter.onDown.addOnce(menuState.start, true);
+  //enter.onDown.addOnce(menuState.start, true);
   // esc.onDown.addOnce(function(){
   //   menuStage = 1;
   // });
+}
+
+function getLevels() {
+  selectedLevel = 0;
+  levelData = game.cache.getJSON('levels');
+}
+
+function paintMenu() {
+  game.add.sprite(0, 0, 'splashbg');
+  startText = game.add.text(game.world.centerX, game.world.centerY + 50, "Press Enter to start", { fontSize: '40px', fill: '#ff5dbd' });
+  startText.anchor.set(0.5, 0);
+  startText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
+}
+
+function menuMusic() {
+  menuMusic = game.add.audio('soundtrackMenu');
+  menuMusic.loop = true;
+  menuMusic.volume = config.musicVol;
+  menuMusic.play();
 }
 
 function bindKeys() {

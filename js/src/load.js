@@ -11,16 +11,16 @@ loadState.prototype = {
     game.load.image('ground', 'assets/ground.png');
     game.load.image('platform', 'assets/platform.png');
     game.load.image('star', 'assets/ball.png');
-    game.load.spritesheet('paddle', 'assets/playeranim.png', 64, 28, 9);
     game.load.image('block', 'assets/block.png');
     game.load.image('powerup', 'assets/block-powerup.png');
+
+    game.load.spritesheet('paddle', 'assets/playeranim.png', 64, 28, 9);
 
     game.load.audio('soundtrackMenu', 'assets/audio/trash80-missing-you.mp3');
     game.load.audio('soundtrack', 'assets/audio/trash80-robot-sneakers.mp3');
     game.load.audio('blip', 'assets/audio/blip.wav');
     game.load.audio('blip2', 'assets/audio/blip2.wav');
     game.load.audio('explosion', 'assets/audio/Explosion2.wav');
-
     game.load.audio('godlike', 'assets/audio/godlike.mp3');
     game.load.audio('combowhore', 'assets/audio/combowhore.mp3');
     game.load.audio('holyshit', 'assets/audio/holyshit.mp3');
