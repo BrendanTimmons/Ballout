@@ -1,3 +1,4 @@
+var timer = 0;
 var Helpers = {
   flashBg: function(){
     $("body").css({
@@ -9,6 +10,20 @@ var Helpers = {
         'backgroundColor':"#3f3440"
       });
     }, 250);
+  },
+
+  centerObjects: function(objects){
+    for(var object of objects){
+      object.anchor.setTo(0.5);
+    }
+  },
+
+  blinkText: function(ele, speed){
+    timer += game.time.elapsed;
+    if(timer >= speed){
+      timer -= speed;
+      ele.visible = !ele.visible;
+    }
   },
 
   updateHighScores: function(){

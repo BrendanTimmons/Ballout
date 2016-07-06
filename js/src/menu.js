@@ -1,17 +1,22 @@
-var startText,
-    timer = 0,
-    menuStage,
-    selectedLevel;
+var Menu = function(){};
 
-var cursors,
-    shift,
-    esc,
-    enter;
-
-var config = {
-  musicVol: 0.6,
-  sfxVol: 1,
+Menu.prototype = {
+  
 }
+
+
+
+
+
+
+//var startText,
+//    menuStage,
+//    selectedLevel;
+
+//var cursors,
+//    shift,
+//    esc,
+//    enter;
 
 var menuState = {
   create: function(){
@@ -21,7 +26,6 @@ var menuState = {
     menuMusic();
     getLevels();
 
-    enter.onDown.addOnce(startGame);
   },
 
   update: function(){
@@ -92,32 +96,4 @@ function getLevels(){
   levelData = game.cache.getJSON('levels');
 }
 
-function paintMenu(){
-    game.add.sprite(0,0, 'splashbg');
-    startText = game.add.text(game.world.centerX, game.world.centerY + 50, "Press Enter to start", {fontSize: '40px', fill: '#ff5dbd'});
-    startText.anchor.set(0.5, 0);
-    startText.setShadow(-1, 1, 'rgba(0,0,0,1)', 0);
-}
 
-function menuMusic(){
-    menuMusic = game.add.audio('soundtrackMenu');
-    menuMusic.loop = true;
-    menuMusic.volume = config.musicVol;
-    menuMusic.play();
-}
-
-function bindKeys(){
-  cursors = game.input.keyboard.createCursorKeys();
-  shift = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT); 
-  enter = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
-  esc = game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-  space = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
-}
-
-function blinkText(ele, speed){
-  timer += game.time.elapsed;
-  if(timer >= speed){
-    timer -= speed;
-    ele.visible = !ele.visible;
-  }
-}

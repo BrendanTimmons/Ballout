@@ -14,13 +14,16 @@ gulp.task("compile:js", function () {
     .pipe(order([
       "helpers.js",
       "boot.js",
+      "config.js",
       "load.js",
       "menu.js",
       "play.js",
       "game.js"
     ]))
     .pipe(sourcemaps.init())
-    .pipe(babel())
+    .pipe(babel({
+      presets: ['es2015']
+    }))
     .pipe(concat("all.js"))
     .pipe(sourcemaps.write("."))
     .pipe(gulp.dest("js"));
