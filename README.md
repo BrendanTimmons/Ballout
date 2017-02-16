@@ -1,7 +1,7 @@
 # Ballout
 Arkanoid / Breakout Ripoff.
 
-http://ballout.puffy.dog
+http://brendantimmons.github.io/Ballout/
 
 ![Screenshot](https://raw.githubusercontent.com/BrendanTimmons/Ballout/gh-pages/assets/splash-bg.jpg)
 
