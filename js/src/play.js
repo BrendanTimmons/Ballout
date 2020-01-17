@@ -168,10 +168,10 @@ var playState = {
   movePlayer: function(){
     // THIS COLLISION DETECTION FUCKING SUCKS. FIGURE IT OUT
 
-    if (cursors.left.isDown && (playState.player.sprite.x - playState.player.sprite.width / 2) > game.world.bounds.left){
+    if (game.input.keyboard.isDown(Phaser.Keyboard.A) && (playState.player.sprite.x - playState.player.sprite.width / 2) > game.world.bounds.left){
       playState.player.sprite.body.velocity.x = -playState.player.speed;
       playState.player.sprite.animations.play("left", 50, true);
-    } else if (cursors.right.isDown && (playState.player.sprite.x + playState.player.sprite.width + 30) < game.world.bounds.right){
+    } else if (game.input.keyboard.isDown(Phaser.Keyboard.D) && (playState.player.sprite.x + playState.player.sprite.width + 30) < game.world.bounds.right){
       playState.player.sprite.body.velocity.x = playState.player.speed;
       playState.player.sprite.animations.play("right", 50, true);
     } else {
