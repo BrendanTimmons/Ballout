@@ -486,7 +486,7 @@ var playState = {
 
   playerBallCollision: function () {
     var collisionLoc = (playState.ball.sprite.x + playState.ball.sprite.width / 2 - playState.player.sprite.x) / playState.player.sprite.width;
-    var newVel = Math.sqrt(Math.pow(playState.ball.sprite.body.velocity.x, 4) + Math.pow(playState.ball.sprite.body.velocity.y, 4));
+    var newVel = Math.sqrt(Math.pow(playState.ball.sprite.body.velocity.x, 15) + Math.pow(playState.ball.sprite.body.velocity.y, 15));
     game.physics.arcade.velocityFromAngle(225 + collisionLoc * 90, newVel, playState.ball.sprite.body.velocity);
     blip.play();
     playState.combo = 1;
