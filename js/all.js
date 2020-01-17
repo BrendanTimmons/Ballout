@@ -488,6 +488,7 @@ var playState = {
     var collisionLoc = (playState.ball.sprite.x + playState.ball.sprite.width / 2 - playState.player.sprite.x) / playState.player.sprite.width;
     var newVel = Math.sqrt(Math.pow(playState.ball.sprite.body.velocity.x, 2) + Math.pow(playState.ball.sprite.body.velocity.y, 2));
     game.physics.arcade.velocityFromAngle(225 + (collisionLoc * 90), newVel, playState.ball.sprite.body.velocity);
+    console.log(newVel);
     blip.play();
     playState.combo = 1;
     playState.comboText.text = 'Combo: x' + playState.combo;
